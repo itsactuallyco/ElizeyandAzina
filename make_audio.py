@@ -29,7 +29,10 @@ import sys
 import time
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 HERE = Path(__file__).parent
+load_dotenv(HERE / ".env")
 STORIES = HERE / "stories.json"
 AUDIO = HERE / "audio"
 MANIFEST = AUDIO / "manifest.json"
