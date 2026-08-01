@@ -1,0 +1,27 @@
+# Files Cloudflare should NOT publish as part of the website.
+# Goes in the root of the repo, next to index.html. Uses .gitignore syntax.
+#
+# Why this exists: the build output directory is "/", so Cloudflare treats the
+# whole repo as web content — including .git, which is now well over the 25 MiB
+# per-file limit because git is storing all your MP3s.
+
+# The cause of the "Asset too large" error.
+.git
+.gitignore
+.assetsignore
+
+# Build tooling — needed to make the site, not to serve it.
+# Excluding these also stops them being publicly downloadable.
+*.py
+__pycache__
+*.xlsx
+*.md
+
+# Editor and OS clutter.
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Note: do NOT add _headers here. Cloudflare reads that one at deploy time and
+# it must stay in the upload.
