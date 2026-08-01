@@ -124,6 +124,8 @@ button:focus-visible{outline:4px solid var(--ink); outline-offset:3px; border-ra
 .big-btn svg{width:26px; height:26px;}
 .big-btn.read{flex:1; background:var(--lilac); color:#463A63;}
 .big-btn.read.playing{background:var(--blossom); color:#7A3546;}
+.big-btn.read.recorded{background:#CFE4DA; color:#2E5F55;}
+.big-btn.read.recorded.playing{background:var(--blossom); color:#7A3546;}
 .big-btn.nav{flex:0 0 var(--tap); background:var(--paper); color:var(--ink);}
 .big-btn[disabled]{opacity:.34; pointer-events:none;}
 
@@ -378,6 +380,9 @@ function openStory(i){
 function renderStory(i){
   stopSpeech();
   const p=PEOPLE[i];
+  curPerson=p;
+  const clips=(AUDIO[p.name]||[]);
+  readBtn.classList.toggle('recorded', clips.length>0);
   storyTitle.innerHTML=`${p.name}<span>${p.area}</span>`;
   const body=p.paras.map(t=>`<p>${t}</p>`).join('');
   pageEl.innerHTML=`<svg class="scene" viewBox="0 0 100 100" aria-hidden="true">${art(p)}</svg>${body}
@@ -404,10 +409,15 @@ document.addEventListener('keydown',e=>{
 });
 
 /* ============================================================
-   READ TO ME — gentle American woman's voice
+   READ TO ME
+   Recorded narration if audio/ has it, browser voice otherwise.
    ============================================================ */
 const synth=window.speechSynthesis;
+let AUDIO={}, curPerson=null;
 let chosenVoice=null, speaking=false, queue=[], qi=0;
+const player=new Audio();   /* one element, reused — iOS only allows playback
+                               on an element first started by a real tap */
+player.preload='auto';
 
 const FEMALE_US=['samantha','ava','allison','susan','nicky','zoe','joanna','salli','kendra','kimberly',
   'aria','jenny','michelle','ana','google us english','microsoft zira','victoria','karen','moira','fiona','tessa'];
@@ -439,32 +449,54 @@ function highlight(n){
 }
 function stopSpeech(){
   if(synth) synth.cancel();
+  player.pause();
+  try{ player.removeAttribute('src'); player.load(); }catch(e){}
   speaking=false; queue=[]; qi=0;
   readBtn.classList.remove('playing'); readLabel.textContent='Read to me';
   highlight(-1);
 }
-function speakNext(){
+
+/* ---- recorded narration ---- */
+function playClip(){
   if(qi>=queue.length){ stopSpeech(); return; }
+  highlight(qi);
+  player.src='audio/'+queue[qi];
+  player.play().catch(err=>{ console.warn('audio failed, using browser voice',err);
+                             fallbackFrom(qi); });
+}
+player.addEventListener('ended',()=>{ if(!speaking) return; qi++; playClip(); });
+player.addEventListener('error',()=>{ if(speaking) fallbackFrom(qi); });
+
+/* if a clip is missing or blocked, finish the story with the browser voice */
+function fallbackFrom(n){
+  const paras=[...pageEl.querySelectorAll('p')].map(el=>el.textContent.trim()).filter(Boolean);
+  queue=paras.slice(n); qi=0; speakNext();
+}
+
+/* ---- browser voice ---- */
+function speakNext(){
+  if(!synth || qi>=queue.length){ stopSpeech(); return; }
   highlight(qi);
   const u=new SpeechSynthesisUtterance(speakable(queue[qi]));
   if(chosenVoice) u.voice=chosenVoice;
-  u.lang='en-US';
-  u.rate=0.84;
-  u.pitch=1.12;
-  u.volume=1;
+  u.lang='en-US'; u.rate=0.84; u.pitch=1.12; u.volume=1;
   u.onend=()=>{ qi++; setTimeout(speakNext,420); };
   u.onerror=stopSpeech;
   synth.speak(u);
 }
+
 readBtn.addEventListener('click',()=>{
-  if(!synth){ readLabel.textContent='Not available'; return; }
   if(speaking){ stopSpeech(); return; }
-  if(!chosenVoice) pickVoice();
-  queue=[...pageEl.querySelectorAll('p')].map(el=>el.textContent.trim()).filter(Boolean);
-  qi=0; speaking=true;
+  const paras=[...pageEl.querySelectorAll('p')].map(el=>el.textContent.trim()).filter(Boolean);
+  const clips=curPerson ? (AUDIO[curPerson.name]||[]) : [];
+  if(!clips.length && !synth){ readLabel.textContent='Not available'; return; }
+  speaking=true; qi=0;
   readBtn.classList.add('playing'); readLabel.textContent='Stop';
-  speakNext();
+  if(clips.length>=paras.length){ queue=clips; playClip(); }
+  else if(clips.length){ queue=clips; playClip(); }
+  else { if(!chosenVoice) pickVoice(); queue=paras; speakNext(); }
 });
+
 window.addEventListener('beforeunload',()=>{ if(synth) synth.cancel(); });
 
 /* ============================================================
@@ -491,6 +523,11 @@ async function boot(){
     buildSayRegex();
     buildCats();
     loadState.remove();
+    /* narration is optional — the site works fine before any audio exists */
+    try{
+      const m = await fetch('audio/manifest.json?v=' + Date.now());
+      if(m.ok) AUDIO = (await m.json()).people || {};
+    }catch(e){ /* no recorded narration yet */ }
   }catch(err){
     const isFile = location.protocol === 'file:';
     if(isFile){

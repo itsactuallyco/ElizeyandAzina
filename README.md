@@ -11,6 +11,8 @@ by you, not by a developer.
 | `stories.json` | Every category, story and pronunciation | Yes, if editing directly |
 | `stories.xlsx` | The same content as a spreadsheet | Yes, if editing in Excel |
 | `build.py` | Turns the spreadsheet into `stories.json` | Run it, don't edit it |
+| `make_audio.py` | Records the narration MP3s | Run it, tweak the tone at the top |
+| `audio/` | The recorded narration (appears after you run it) | No |
 
 There are two ways to make changes and they produce the same result. **Pick one
 and stay with it** — if you edit `stories.json` by hand and later run `build.py`,
@@ -142,6 +144,68 @@ spelled correctly on screen. In `stories.json` under `"pronunciations"`, or on t
 ```
 
 Only the narration changes. The text your children read is untouched.
+
+---
+
+## Part 3 — Recorded narration
+
+The site ships with a browser voice that works everywhere and costs nothing, but
+it sounds mechanical. `make_audio.py` replaces it with real recorded narration.
+Any story with audio uses it; anything without falls back to the browser voice,
+so you can record a few at a time and nothing ever breaks.
+
+### Setup (once)
+
+```
+pip install openai
+export OPENAI_API_KEY=sk-...          # from platform.openai.com
+```
+
+On Windows PowerShell, use `$env:OPENAI_API_KEY="sk-..."` instead of `export`.
+
+### Audition a voice before committing
+
+```
+python3 make_audio.py --only "Rumi"
+```
+
+That's six paragraphs and about five cents. Listen to `audio/rumi/00.mp3`. If the
+voice isn't right, delete the folder and try another:
+
+```
+python3 make_audio.py --only "Rumi" --voice nova --force
+```
+
+OpenAI's warmer female voices are `shimmer` (the default here), `nova`, `coral`
+and `sage`. The tone comes mostly from the `INSTRUCTIONS` block at the top of
+`make_audio.py` — plain English, edit it freely. If you want her slower or
+warmer, say so there and regenerate.
+
+### Generate everything
+
+```
+python3 make_audio.py --estimate      # check the cost first
+python3 make_audio.py
+```
+
+Then upload the whole `audio/` folder to GitHub alongside your other changes.
+
+### Day to day
+
+Run `make_audio.py` after every `build.py`. It hashes each paragraph, so it only
+pays to regenerate the ones whose text actually changed — edit one sentence and
+you'll re-record one paragraph, not two hours of audio. Failed paragraphs are
+retried automatically and reported at the end; just rerun to pick them up.
+
+The **Read to me** button turns green on stories that have recorded audio, so you
+can see at a glance what's done.
+
+### If you want better
+
+`--provider elevenlabs` (with `pip install elevenlabs` and an `ELEVENLABS_API_KEY`)
+gives noticeably better rhythm and pauses for roughly four times the cost. Set
+`voice` in the `PROVIDERS` block to any voice name from your ElevenLabs library.
+Worth trying only if the OpenAI narration still sounds flat to you.
 
 ---
 
