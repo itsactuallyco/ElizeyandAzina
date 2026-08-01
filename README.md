@@ -1,4 +1,4 @@
-# Story Garden
+# Baji's Story Garden
 
 A children's story site of great lives from Islamic history. Built to be edited
 by you, not by a developer.

@@ -1,0 +1,22 @@
+{
+ "provider": "openai",
+ "voice": "sage",
+ "people": {
+  "Rumi": [
+   "rumi/00.mp3",
+   "rumi/01.mp3",
+   "rumi/02.mp3",
+   "rumi/03.mp3",
+   "rumi/04.mp3",
+   "rumi/05.mp3"
+  ]
+ },
+ "hashes": {
+  "rumi/00": "29abc35e68750a04",
+  "rumi/01": "d1a6b69581436742",
+  "rumi/02": "e73749cb6a5e1856",
+  "rumi/03": "51b6a641adfc5f6a",
+  "rumi/04": "4520ddadefc34706",
+  "rumi/05": "e2a4ca6a8bab987d"
+ }
+}

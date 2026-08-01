@@ -47,7 +47,7 @@ INSTRUCTIONS = (
 PROVIDERS = {
     "openai": dict(
         model="gpt-4o-mini-tts",
-        voice="shimmer",       # try: shimmer, nova, coral, sage
+        voice="sage",       # try: shimmer, nova, coral, sage
         rate_per_million=15.0,
     ),
     "elevenlabs": dict(
