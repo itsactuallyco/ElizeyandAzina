@@ -1,0 +1,733 @@
+{
+ "categories": [
+  {
+   "id": "brave",
+   "name": "Brave Hearts",
+   "blurb": "Courage when it counted most",
+   "icon": "brave",
+   "tint": "#F6D7DD"
+  },
+  {
+   "id": "leaders",
+   "name": "Fair Leaders",
+   "blurb": "Power used to lift people up",
+   "icon": "leaders",
+   "tint": "#F7DFA0"
+  },
+  {
+   "id": "healers",
+   "name": "Healers",
+   "blurb": "Doctors who eased people's pain",
+   "icon": "healers",
+   "tint": "#CFE4DA"
+  },
+  {
+   "id": "stars",
+   "name": "Stargazers & Numbers",
+   "blurb": "Counting the sky and the world",
+   "icon": "stars",
+   "tint": "#DED4EE"
+  },
+  {
+   "id": "makers",
+   "name": "Makers & Inventors",
+   "blurb": "Building, testing, figuring out",
+   "icon": "makers",
+   "tint": "#CBDDEF"
+  },
+  {
+   "id": "explorers",
+   "name": "Explorers & Mapmakers",
+   "blurb": "Off to see the whole world",
+   "icon": "explorers",
+   "tint": "#F3DCC4"
+  },
+  {
+   "id": "thinkers",
+   "name": "Thinkers & Teachers",
+   "blurb": "Big questions and big ideas",
+   "icon": "thinkers",
+   "tint": "#D9E8C9"
+  },
+  {
+   "id": "gentle",
+   "name": "Gentle Souls",
+   "blurb": "Kindness, poems and love",
+   "icon": "gentle",
+   "tint": "#DED4EE"
+  }
+ ],
+ "people": [
+  {
+   "name": "Khadijah bint Khuwaylid",
+   "area": "Early Islamic History & Commerce",
+   "cat": "gentle",
+   "obj": "trade",
+   "wear": "hijab",
+   "robe": "#F6D7DD",
+   "wc": "#DED4EE",
+   "tint": "#F6D7DD",
+   "paras": [
+    "Long ago in Mecca, a woman named Khadijah ran her own trading business, something very few women did at the time. Merchants across Arabia trusted her because she was honest, wise, and fair in every deal. She hired a young man named Muhammad to lead her caravans, because he too was known for always telling the truth. Impressed by his honesty, Khadijah later asked to marry him.",
+    "Years later, when Muhammad received his first message from God and came home shaking with fear, Khadijah did not hesitate. She comforted him and said God would never let anything bad happen to him, because he was kind to his family, generous to the poor, and always spoke the truth. She became the very first person to believe in his message."
+   ],
+   "lesson": "Khadijah shows children that success and courage can grow side by side. She used her wealth and wisdom not just for herself, but to support someone she believed in, even when his message was brand new and the future was uncertain. Sometimes believing in someone takes the biggest heart of all."
+  },
+  {
+   "name": "Nusaybah bint Ka'ab al-Ansariyyah",
+   "area": "Military Courage & Loyalty",
+   "cat": "brave",
+   "obj": "shield",
+   "wear": "hijab",
+   "robe": "#CFE4DA",
+   "wc": "#CBDDEF",
+   "tint": "#CFE4DA",
+   "paras": [
+    "Nusaybah went to the Battle of Uhud to bring water to the fighters and care for the wounded, like the other women there. But when the battle suddenly turned and enemy soldiers rushed toward the Prophet Muhammad, she did not run away. She picked up a sword and shield and stood directly in front of him, protecting him with her own body.",
+    "Fighters came at her again and again. She was wounded many times over, but she did not step aside. Years later, in another battle, she lost her hand while still fighting bravely for what she believed in.",
+    "When people asked her afterward how she found such courage on that frightening day, she said she thought of only one thing: keeping the Prophet safe, whatever it cost her."
+   ],
+   "lesson": "Nusaybah teaches children that courage isn't about being the biggest or strongest person in the room. It's about standing firm for the people and the beliefs you love, even when you're afraid. Sometimes the bravest people are exactly the ones nobody expects."
+  },
+  {
+   "name": "Khalid ibn al-Walid",
+   "area": "Military Strategy",
+   "cat": "brave",
+   "obj": "sword",
+   "wear": "helmet",
+   "robe": "#CBDDEF",
+   "wc": "#FDFAF5",
+   "tint": "#CBDDEF",
+   "paras": [
+    "Before he became one of history's greatest generals, Khalid ibn al-Walid actually fought against the Muslims in battle. But once he became Muslim himself, he changed direction completely and used his talents to defend his new community instead.",
+    "The Prophet Muhammad gave him a title that stuck forever: Saifullah, the Sword of God. Khalid went on to lead armies in more than a hundred battles, and remarkably, he was never defeated in a single one. His most famous victory came at the Battle of Yarmouk, where clever strategy helped a smaller army outmaneuver a much larger opponent.",
+    "What made Khalid truly special wasn't only his skill in battle. It was his humility in admitting he had once been wrong, and his discipline in constantly studying, planning, and improving instead of relying on luck."
+   ],
+   "lesson": "Khalid shows children that it is never too late to change direction and use your talents for good. Being strong isn't only physical. It also means having the courage to say, \"I was wrong, and I want to do better.\""
+  },
+  {
+   "name": "Umar ibn al-Khattab",
+   "area": "Governance & Public Welfare",
+   "cat": "leaders",
+   "obj": "lantern",
+   "wear": "turban",
+   "robe": "#DED4EE",
+   "wc": "#FDFAF5",
+   "tint": "#DED4EE",
+   "paras": [
+    "Umar ibn al-Khattab led a huge empire, but he refused to live like a king. He wore patched clothes, carried his own water, and often walked the streets of Medina alone at night just to check on his people.",
+    "One night, he came across a mother trying to comfort her hungry, crying children by boiling stones in a pot, pretending it was dinner so they would fall asleep believing food was on the way. Umar didn't send a servant to help. He rushed to the storehouse himself, carried a sack of flour on his own back to her home, and helped her cook the meal with his own hands.",
+    "As caliph, Umar also built one of the world's first organized systems to support the poor, the elderly, and orphans, with regular payments from the public treasury."
+   ],
+   "lesson": "Umar shows children that real leaders never think they're too important to help someone with their own two hands. True strength means using power to lift others up, especially the ones who feel forgotten."
+  },
+  {
+   "name": "Rabia al-Adawiyya",
+   "area": "Sufi Mysticism & Theology",
+   "cat": "gentle",
+   "obj": "torchwater",
+   "wear": "hijab",
+   "robe": "#CBDDEF",
+   "wc": "#F7DFA0",
+   "tint": "#CBDDEF",
+   "paras": [
+    "Rabia grew up with very little. Some accounts say she was even taken and sold into slavery as a child. Yet through all of it, her heart grew toward something bigger: a deep, pure love for God.",
+    "Once freed, Rabia chose to spend her life in devotion and reflection rather than chasing money or comfort. People began traveling from far away just to hear her wisdom. According to a story told about her for centuries, she was once seen walking through the streets carrying a lit torch in one hand and a bucket of water in the other. When someone asked why, she explained that she wanted to set fire to Paradise and pour water on the flames of Hell, so that people would love and worship God simply out of love, not because they wanted a reward or feared punishment."
+   ],
+   "lesson": "Rabia teaches children that kindness and devotion mean the most when they come from the heart, not because we want something back. Someone who starts with very little, no money and no power, can still become one of the wisest, most respected people of their time."
+  },
+  {
+   "name": "Al-Khwarizmi",
+   "area": "Mathematics",
+   "cat": "stars",
+   "obj": "numbers",
+   "wear": "turban",
+   "robe": "#CFE4DA",
+   "wc": "#F7DFA0",
+   "tint": "#CFE4DA",
+   "paras": [
+    "In the great House of Wisdom in Baghdad, a scholar named Al-Khwarizmi loved solving one particular kind of puzzle: numbers nobody had figured out yet. He wondered if there could be a set of clear, repeatable steps that would solve any math problem, every single time.",
+    "He wrote his method down in a book and called it \"al-jabr,\" meaning \"reuniting broken parts.\" Today we call it algebra, and students all over the world still learn it in school.",
+    "Al-Khwarizmi didn't stop there. He also described careful, step-by-step methods for solving problems in general. Centuries later, when his own name was translated into Latin as \"algorithmus,\" it gave us the word algorithm, the very idea behind how computers and phones work today."
+   ],
+   "lesson": "Al-Khwarizmi teaches children that asking \"why\" and \"how\" can lead to discoveries that last forever. He didn't just solve one math problem. He built a system so useful that, more than a thousand years later, kids still use his ideas in school every single day."
+  },
+  {
+   "name": "Fatima al-Fihri",
+   "area": "Education",
+   "cat": "thinkers",
+   "obj": "school",
+   "wear": "hijab",
+   "robe": "#F6D7DD",
+   "wc": "#CFE4DA",
+   "tint": "#F6D7DD",
+   "paras": [
+    "When Fatima al-Fihri's father passed away, he left her and her sister a large inheritance. Many people might have used that money just for themselves. Fatima had a different dream. She wanted to build a place where people could learn forever.",
+    "In the city of Fez, Morocco, Fatima used her own money to found a mosque and school called al-Qarawiyyin in the year 859. She personally oversaw its construction, and tradition holds she fasted throughout the process as an act of gratitude and devotion.",
+    "That school is still open today, more than 1,160 years later, and is recognized as the oldest continuously operating institution of higher learning in the entire world."
+   ],
+   "lesson": "Fatima shows children that big dreams don't need permission. They need vision, generosity, and follow-through. A young woman with an inheritance could have chosen an easy, comfortable life. Instead, she built something that would help millions of students for over a thousand years, proving that one person's generosity really can change the world."
+  },
+  {
+   "name": "Ahmad ibn Tulun",
+   "area": "Public Health & Medicine",
+   "cat": "healers",
+   "obj": "hospital",
+   "wear": "turban",
+   "robe": "#CBDDEF",
+   "wc": "#FDFAF5",
+   "tint": "#CBDDEF",
+   "paras": [
+    "Ahmad ibn Tulun ruled Egypt, but he believed something powerful: every person, rich or poor, deserved good medical care.",
+    "In the year 872, he built a great hospital in Cairo, and he set an unusual rule. Before entering, his own weapons and valuables were removed and locked away, just like every other patient's, so that no one, not even the ruler himself, would receive special treatment.",
+    "The hospital had separate wards for different illnesses, offered free medicine and treatment to anyone who needed it, and even gave patients a change of clothes and a bit of spending money when they were well enough to go home."
+   ],
+   "lesson": "Ahmad ibn Tulun teaches children a beautiful lesson about fairness. Real leadership means treating every person, no matter how rich, poor, powerful, or small, with the very same dignity and care. He didn't just say people were equal. He built a hospital that proved it, one patient at a time."
+  },
+  {
+   "name": "Al-Zahrawi",
+   "area": "Surgery & Medicine",
+   "cat": "healers",
+   "obj": "tools",
+   "wear": "turban",
+   "robe": "#CFE4DA",
+   "wc": "#FDFAF5",
+   "tint": "#CFE4DA",
+   "paras": [
+    "In the city of Cordoba, a doctor named Al-Zahrawi spent his whole life trying to make surgery safer and less painful for his patients.",
+    "He designed over 200 surgical instruments himself, many so well made that similar tools are still used by surgeons today, more than a thousand years later. He wrote everything he learned into a massive 30-volume encyclopedia called Al-Tasrif, describing operations, tools, and techniques in careful detail so other doctors could learn from him.",
+    "For centuries after his death, medical schools in Europe translated and studied his work, using it to train their own surgeons."
+   ],
+   "lesson": "Al-Zahrawi shows children that patience and careful attention to detail can save lives. He didn't rush his work or keep his knowledge to himself. He wrote it all down clearly so that doctors far away, and even centuries in the future, could learn from him and help even more people. Sometimes the greatest gift you can give the world is simply teaching others everything you know."
+  },
+  {
+   "name": "Ibn al-Haytham",
+   "area": "Optics & Scientific Method",
+   "cat": "makers",
+   "obj": "light",
+   "wear": "turban",
+   "robe": "#DED4EE",
+   "wc": "#F7DFA0",
+   "tint": "#DED4EE",
+   "paras": [
+    "Ibn al-Haytham had a big problem. He had promised a ruler in Egypt that he could help control the flooding of the Nile River. But once he arrived and studied it closely, he realized it couldn't be done with the tools of his time.",
+    "Worried about what might happen if he failed, he quietly stepped back from public life so he could stay home instead of facing punishment. While there, he did something remarkable with his time. Rather than give up, he spent years running careful experiments on how light and vision actually work.",
+    "He built a dark box with a tiny hole that projected an image onto the wall, proving that light travels in straight lines into our eyes, rather than our eyes sending out rays, as many people believed back then. His book on optics became one of the most important science books ever written."
+   ],
+   "lesson": "Ibn al-Haytham teaches children that even a difficult, scary situation can become an opportunity, if you stay curious and keep testing your ideas instead of just guessing."
+  },
+  {
+   "name": "Ibn Sina (Avicenna)",
+   "area": "Medicine & Philosophy",
+   "cat": "healers",
+   "obj": "medbook",
+   "wear": "turban",
+   "robe": "#F3DCC4",
+   "wc": "#CFE4DA",
+   "tint": "#F3DCC4",
+   "paras": [
+    "By the age of ten, Ibn Sina had already memorized the entire Quran. By his teenage years, he had taught himself so much medicine that he was treating patients other doctors could not help.",
+    "He didn't stop there. Ibn Sina studied philosophy, math, and astronomy late into the night, determined to master every subject he could reach. He eventually wrote The Canon of Medicine, an enormous encyclopedia that organized everything known at the time about diseases, treatments, and the human body.",
+    "For roughly 600 years, from Spain to Central Asia, doctors in training used his book as their main medical textbook."
+   ],
+   "lesson": "Ibn Sina shows children what's possible when curiosity and discipline grow together from a young age. He didn't wait until he felt \"old enough\" to start mastering hard subjects. He started right away, studied constantly, and trusted that hard work in childhood could shape an entire lifetime of helping others."
+  },
+  {
+   "name": "Al-Jazari",
+   "area": "Mechanical Engineering",
+   "cat": "makers",
+   "obj": "gears",
+   "wear": "turban",
+   "robe": "#CBDDEF",
+   "wc": "#F6D7DD",
+   "tint": "#CBDDEF",
+   "paras": [
+    "Al-Jazari worked as a chief engineer for a royal court, and he loved building machines that amazed and delighted people.",
+    "He built a giant elephant clock that told time using water and moving figures. He built a boat carrying four mechanical musicians who could actually play music on their own, powered by hidden pegs and levers, delighting guests at royal parties. He even invented a hand-washing device with an automatic flow mechanism, centuries before modern plumbing existed.",
+    "Al-Jazari carefully wrote and illustrated all of his designs in a book so detailed that engineers today can still study, and even rebuild, his machines by following his instructions."
+   ],
+   "lesson": "Al-Jazari teaches children that creativity and careful engineering go hand in hand. He didn't just imagine wonderful machines. He built them, tested them, and then wrote down every gear and lever so others could learn from his work long after he was gone. Sometimes changing the world starts with simply wanting to make people smile."
+  },
+  {
+   "name": "Saladin",
+   "area": "Military Leadership & Diplomacy",
+   "cat": "brave",
+   "obj": "peacesword",
+   "wear": "helmet",
+   "robe": "#CFE4DA",
+   "wc": "#FDFAF5",
+   "tint": "#CFE4DA",
+   "paras": [
+    "Saladin led the army that recaptured the city of Jerusalem in the year 1187, after it had been held by Crusader forces for nearly a century. Many expected he would take revenge for the violence that happened when the city was first conquered decades before.",
+    "Instead, Saladin chose mercy. He let the city's residents leave peacefully, arranged fair ransom payments so poorer families could still go free, and even paid for some captives himself when they could not afford it. He ordered his soldiers not to harm civilians.",
+    "His reputation for fairness and honor became so respected that even his enemies, including Crusader knights writing their own accounts back in Europe, praised his character for generations afterward."
+   ],
+   "lesson": "Saladin shows children that true strength includes choosing mercy, even toward people who have wronged you. Winning isn't only about defeating an opponent. It's about how you treat people once you have already won."
+  },
+  {
+   "name": "Mansa Musa",
+   "area": "Trade, Wealth & Patronage of Learning",
+   "cat": "leaders",
+   "obj": "gold",
+   "wear": "crown",
+   "robe": "#F7DFA0",
+   "wc": "#FDFAF5",
+   "tint": "#F7DFA0",
+   "paras": [
+    "Mansa Musa ruled the Mali Empire in West Africa, and he was likely the wealthiest person the world has ever known, with vast supplies of gold and salt under his control.",
+    "In 1324, he set out on the hajj pilgrimage to Mecca with an enormous caravan of thousands of people and so much gold that, when he passed through Cairo, he gave away enough to lower the value of gold in Egypt's markets for years afterward.",
+    "But Mansa Musa didn't only spend his wealth on the journey there. Back home, he used his fortune to build mosques, libraries, and schools, especially in the city of Timbuktu, which grew into one of the greatest centers of learning in the world, drawing scholars from across Africa and the Middle East."
+   ],
+   "lesson": "Mansa Musa teaches children that true wealth isn't measured by how much you keep. It's measured by how much good you create with it. He didn't just want to be rich. He wanted his people to be educated, and that dream outlived him by centuries."
+  },
+  {
+   "name": "Ibn Battuta",
+   "area": "Exploration & Geography",
+   "cat": "explorers",
+   "obj": "compass",
+   "wear": "turban",
+   "robe": "#F3DCC4",
+   "wc": "#CBDDEF",
+   "tint": "#F3DCC4",
+   "paras": [
+    "Ibn Battuta was just 21 years old when he left his home in Morocco to complete the hajj to Mecca. He expected the trip to take a year or two.",
+    "Instead, it changed his whole life. Along the way, curiosity kept pulling him further, to Persia, to East Africa, across the deserts of Central Asia, into India, and all the way to China before he finally turned home. In total, his travels lasted around 29 years and covered roughly 75,000 miles, an extraordinary distance for anyone in the 1300s, long before airplanes, cars, or even reliable maps.",
+    "When he finally returned, a ruler asked him to describe everything he had seen and learned. The result, a book called the Rihla, remains one of the most valuable descriptions of what the world looked like more than 650 years ago."
+   ],
+   "lesson": "Ibn Battuta teaches children that curiosity can take you further than you ever planned, and that the willingness to keep exploring and meeting new people is itself a kind of courage."
+  },
+  {
+   "name": "Ali ibn Abi Talib",
+   "area": "Leadership & Jurisprudence",
+   "cat": "leaders",
+   "obj": "scales",
+   "wear": "turban",
+   "robe": "#CFE4DA",
+   "wc": "#FDFAF5",
+   "tint": "#CFE4DA",
+   "paras": [
+    "Ali ibn Abi Talib was raised in the household of his cousin Muhammad from a young age. When Muhammad began receiving revelations from God, Ali is remembered as one of the very first people, and the first child, to believe him without hesitation.",
+    "As he grew older, Ali became known both as a courageous warrior and, even more so, as an extraordinarily wise judge. People traveled long distances just to have him settle their disagreements, because his judgments were famous for being fair and thoughtful, even when a problem seemed impossible to solve.",
+    "Ali later became the fourth caliph, leading the Muslim community through a difficult and divided time, always trying to rule with justice even when it was the harder path."
+   ],
+   "lesson": "Ali shows children that believing in what's right doesn't require being the oldest or most powerful person in the room. Sometimes a child's honest heart sees the truth before anyone else does, and true wisdom means always searching for what is fair, not just what is easy."
+  },
+  {
+   "name": "Uthman ibn Affan",
+   "area": "Governance & Quranic Preservation",
+   "cat": "leaders",
+   "obj": "quran",
+   "wear": "turban",
+   "robe": "#DED4EE",
+   "wc": "#FDFAF5",
+   "tint": "#DED4EE",
+   "paras": [
+    "In Medina, there was only one good source of fresh water, a well called Bi'r Ruma, but it was privately owned, and the owner charged high prices that hurt poorer families most.",
+    "Uthman ibn Affan, a wealthy and generous merchant, bought the well for a large sum. Then he did something remarkable. He made its water free for everyone in the community, forever.",
+    "Later, when the Muslim community needed to prepare an army but lacked supplies, Uthman used his own fortune again, funding soldiers, camels, and equipment almost entirely by himself.",
+    "As the third caliph, Uthman took on another enormous task: making sure the Quran was written down and organized into one official text, then sending trusted copies to major cities so everyone would read the very same version. That same standardized text is what Muslims around the world still read today."
+   ],
+   "lesson": "Uthman teaches children that generosity isn't only about giving money. It's about using what you have to solve problems that help everyone, and sometimes protecting something so carefully that it lasts for generations."
+  },
+  {
+   "name": "Amr ibn al-As",
+   "area": "Military Leadership & City-Founding",
+   "cat": "brave",
+   "obj": "city",
+   "wear": "helmet",
+   "robe": "#F3DCC4",
+   "wc": "#FDFAF5",
+   "tint": "#F3DCC4",
+   "paras": [
+    "Amr ibn al-As led the army that brought Egypt into the Muslim world, and afterward he needed to choose a spot for a new garrison town.",
+    "According to a story passed down through history, when it came time to move his army forward, Amr noticed that a dove had built her nest and laid eggs right on top of his tent. Rather than disturb it, he ordered his own tent left standing until the eggs hatched and the chicks were ready to fly.",
+    "That patch of land, where his tent had stood, became known as Fustat, meaning \"the tent,\" and it grew over time into the great city we now know as Cairo, one of the largest cities in the world today."
+   ],
+   "lesson": "Amr ibn al-As teaches children that even busy, powerful leaders can pause to show gentleness toward the smallest, most vulnerable creatures. A small act of kindness can leave a mark that lasts far longer than anyone could have guessed. In this case, an entire city."
+  },
+  {
+   "name": "Al-Kindi",
+   "area": "Philosophy & Cryptography",
+   "cat": "thinkers",
+   "obj": "cipher",
+   "wear": "turban",
+   "robe": "#DED4EE",
+   "wc": "#CBDDEF",
+   "tint": "#DED4EE",
+   "paras": [
+    "Al-Kindi grew up loving every subject he could get his hands on: philosophy, mathematics, medicine, and music. He became so respected for blending Greek philosophy with Islamic thought that people called him \"the Philosopher of the Arabs.\"",
+    "He was also endlessly curious about secret codes. Al-Kindi noticed that in any language, certain letters appear more often than others. By carefully counting how often each letter showed up in a coded message and comparing it to ordinary writing, he figured out how to crack codes that people thought were unbreakable.",
+    "His method, called frequency analysis, is considered the earliest known scientific approach to breaking codes in history, centuries before modern cryptography and computer security existed."
+   ],
+   "lesson": "Al-Kindi shows children that curiosity doesn't have to stay in one lane. He didn't choose between philosophy, math, and puzzles. He pursued all of them, and it was that wide-ranging curiosity that let him notice patterns nobody else had spotted, making him one of the first codebreakers in recorded history."
+  },
+  {
+   "name": "Al-Ghazali",
+   "area": "Theology & Philosophy",
+   "cat": "thinkers",
+   "obj": "heartbook",
+   "wear": "turban",
+   "robe": "#CFE4DA",
+   "wc": "#F6D7DD",
+   "tint": "#CFE4DA",
+   "paras": [
+    "Al-Ghazali was one of the most respected teachers in Baghdad, admired by huge crowds of students. But privately, he was full of hard questions. How do we really know what is true? Was he teaching because he believed it, or because it made him famous?",
+    "Rather than ignore these doubts, Al-Ghazali did something brave. He walked away from his prestigious position, left fame and comfort behind, and spent years traveling and searching quietly for real answers.",
+    "Eventually he returned to teaching and writing, but now with a wisdom that touched millions of people for centuries afterward. He wrote honestly about his whole struggle in a book called The Deliverance from Error, describing a process of questioning everything, much like how scientists and philosophers still test their own ideas today."
+   ],
+   "lesson": "Al-Ghazali teaches children that asking hard questions isn't a sign of weak faith. Sometimes being honest about your doubts, and searching carefully for the truth, is one of the bravest and wisest things a person can do."
+  },
+  {
+   "name": "Ibn Rushd (Averroes)",
+   "area": "Philosophy & Law",
+   "cat": "thinkers",
+   "obj": "twobooks",
+   "wear": "turban",
+   "robe": "#F3DCC4",
+   "wc": "#DED4EE",
+   "tint": "#F3DCC4",
+   "paras": [
+    "Ibn Rushd worked as a judge in Cordoba, carefully weighing evidence and arguments to make fair decisions for the people who came before him. In his free time, he pursued a different kind of puzzle: understanding the great Greek philosopher Aristotle.",
+    "Aristotle's writings were so complicated that many scholars struggled to understand them. Ibn Rushd wrote detailed commentaries explaining Aristotle's ideas clearly, one by one. His work became so valuable that, centuries later in Europe, thinkers simply called him \"The Commentator,\" because his explanations became almost as important as Aristotle's own writings.",
+    "His ideas eventually reached scholars across Europe, including the philosopher Thomas Aquinas, shaping how great thinkers argued about faith and reason for generations, both in the Muslim world and beyond."
+   ],
+   "lesson": "Ibn Rushd shows children that being fair and being curious can live in the very same person. A good judge listens carefully to understand every side, and that same patient listening is exactly what helped him become one of history's greatest explainers of difficult ideas."
+  },
+  {
+   "name": "Jabir ibn Hayyan",
+   "area": "Chemistry",
+   "cat": "makers",
+   "obj": "flask",
+   "wear": "turban",
+   "robe": "#CBDDEF",
+   "wc": "#CFE4DA",
+   "tint": "#CBDDEF",
+   "paras": [
+    "Long before modern laboratories existed, a scholar known as Jabir ibn Hayyan spent his days mixing, heating, and testing different materials to understand what they were really made of.",
+    "He is remembered for inventing laboratory tools and techniques still used by scientists today, including distillation, which separates liquids by heating them, and crystallization, which grows pure crystals from a solution. He even designed a piece of equipment called the alembic, used for distilling liquids, the same basic design chemists still use today.",
+    "Jabir believed strongly in testing ideas through careful, repeated experiments rather than simply guessing. That patient approach became the foundation for what we now call chemistry, and centuries later in Europe, his name was translated as \"Geber,\" his techniques shaping early European chemistry and medicine."
+   ],
+   "lesson": "Jabir ibn Hayyan teaches children that real answers come from testing, not guessing. Being a good scientist means being patient enough to try something over and over, carefully, until you truly understand how it works."
+  },
+  {
+   "name": "Al-Biruni",
+   "area": "Science & Ethnography",
+   "cat": "explorers",
+   "obj": "globe",
+   "wear": "turban",
+   "robe": "#CFE4DA",
+   "wc": "#CBDDEF",
+   "tint": "#CFE4DA",
+   "paras": [
+    "Al-Biruni wanted to know the exact size of the Earth, a question people had wondered about for centuries. Using just a mountain, careful angle measurements, and clever trigonometry, he calculated the Earth's radius so accurately that his number is remarkably close to what scientists measure today using satellites.",
+    "His curiosity didn't stop at math and mountains. When Al-Biruni traveled to India, instead of writing about its people only from his own point of view, he learned Sanskrit, studied Hindu religious texts directly, and wrote one of history's earliest fair and detailed descriptions of another culture's beliefs and customs."
+   ],
+   "lesson": "Al-Biruni teaches children two lessons at once. Careful, patient measurement can uncover incredible truths about our world, and real understanding of other people requires humility: learning their language and listening to their own stories, instead of assuming you already know. Curiosity, done right, makes us both smarter and kinder."
+  },
+  {
+   "name": "Ibn al-Nafis",
+   "area": "Medicine (Circulatory System)",
+   "cat": "healers",
+   "obj": "heart",
+   "wear": "turban",
+   "robe": "#F6D7DD",
+   "wc": "#FDFAF5",
+   "tint": "#F6D7DD",
+   "paras": [
+    "For hundreds of years, doctors believed blood passed straight through a wall inside the heart to travel from one side to the other. Ibn al-Nafis, a careful physician in Cairo, studied the heart closely and realized something didn't add up. That wall had no visible holes at all.",
+    "Through careful observation, he proposed something new and correct: blood actually travels from the heart, through the lungs, picks up air, and returns to the heart before going out to the rest of the body. This is called pulmonary circulation, and it's exactly how doctors describe the heart and lungs working today.",
+    "Remarkably, Ibn al-Nafis figured this out roughly 300 years before European scientists reached the same conclusion and became known for it."
+   ],
+   "lesson": "Ibn al-Nafis shows children that it's okay, and important, to question something \"everyone knows,\" if your own careful observations tell a different story. Being right doesn't always mean being first to speak. Sometimes it means being patient enough to look closer than anyone else has."
+  },
+  {
+   "name": "Maryam al-Ijliya al-Astrulabi",
+   "area": "Astronomy & Instrument-Making",
+   "cat": "stars",
+   "obj": "astrolabe",
+   "wear": "hijab",
+   "robe": "#DED4EE",
+   "wc": "#F7DFA0",
+   "tint": "#DED4EE",
+   "paras": [
+    "In the city of Aleppo, a young woman named Maryam learned an unusual and highly skilled trade from her father: how to design and build astrolabes, an intricate brass instrument used to track the stars, tell time, and find directions for travel and prayer.",
+    "Building an astrolabe took precise mathematics, careful metalwork, and deep knowledge of astronomy, skills that took years to master. Maryam became so skilled that she worked as an official instrument-maker at the royal court, at a time when very few women were recorded by name for this kind of technical, scientific craft.",
+    "Sailors, astronomers, and travelers across the medieval world depended on well-made astrolabes like hers to navigate the seas, track the calendar, and know the correct times and direction for daily prayer."
+   ],
+   "lesson": "Maryam teaches children that skilled, technical work, the kind that takes years of patient practice to master, belongs to anyone willing to learn it carefully, regardless of what people expected at the time. Her name still reminds us that expert craftsmanship has never belonged to only one type of person."
+  },
+  {
+   "name": "Omar Khayyam",
+   "area": "Mathematics & Poetry",
+   "cat": "stars",
+   "obj": "quill",
+   "wear": "turban",
+   "robe": "#F6D7DD",
+   "wc": "#F3DCC4",
+   "tint": "#F6D7DD",
+   "paras": [
+    "Omar Khayyam had two great loves that most people thought didn't belong together: mathematics and poetry.",
+    "As a mathematician, he tackled a problem that had stumped scholars for centuries, solving cubic equations using a clever geometric method involving intersecting curves. A ruler later asked him to help fix the calendar, and the Jalali calendar he helped design was so precise that it lost only about one day every few thousand years, even more accurate than the calendar most of the world uses now.",
+    "Centuries later, Omar Khayyam became equally famous for his beautiful short poems, called the Rubaiyat, which explored big questions about life, time, and meaning with striking honesty and imagination."
+   ],
+   "lesson": "Omar Khayyam shows children that you don't have to choose between being \"a math person\" or \"a creative person.\" The same sharp, curious mind that solves equations can also write beautiful poetry. Sometimes the most brilliant people are the ones who refuse to pick just one interest and give up the rest."
+  },
+  {
+   "name": "Nasir al-Din al-Tusi",
+   "area": "Astronomy",
+   "cat": "stars",
+   "obj": "observatory",
+   "wear": "turban",
+   "robe": "#CBDDEF",
+   "wc": "#DED4EE",
+   "tint": "#CBDDEF",
+   "paras": [
+    "Nasir al-Din al-Tusi convinced a powerful ruler to fund something the world hadn't seen at such a scale before: a massive observatory built specifically for studying the stars, in the city of Maragheh.",
+    "He gathered brilliant scientists from many different regions to work there together, sharing instruments, comparing notes, and building one of the largest libraries of its time. Together, they created remarkably accurate star charts and improved the models scholars used to describe how planets moved through the sky.",
+    "Al-Tusi also solved a tricky problem in astronomy using a clever geometric idea now called the \"Tusi couple.\" Centuries later, a strikingly similar idea appeared in the work of the European astronomer Copernicus, and historians still study how far al-Tusi's ideas may have traveled."
+   ],
+   "lesson": "Al-Tusi teaches children the power of bringing people together. He didn't just want to be a brilliant scientist alone. He built a place where many curious minds could work as a team, and that teamwork produced discoveries that echoed for centuries."
+  },
+  {
+   "name": "Ibn Khaldun",
+   "area": "Sociology & Historiography",
+   "cat": "thinkers",
+   "obj": "scroll",
+   "wear": "turban",
+   "robe": "#F3DCC4",
+   "wc": "#F7DFA0",
+   "tint": "#F3DCC4",
+   "paras": [
+    "Ibn Khaldun spent years as an advisor to rulers across North Africa, watching kingdoms rise to great power and then, often quite suddenly, fall apart. He wanted to understand why.",
+    "Eventually, he retreated to a quiet castle for several years and wrote an enormous introduction to history called the Muqaddimah. In it, he carefully studied patterns: how groups of people build strong communities, how leaders gain or lose the loyalty of their people, and how taxing citizens too heavily can actually shrink a kingdom's wealth instead of growing it, an idea economists still study today.",
+    "His methodical, evidence-based way of studying human society was so far ahead of its time that historians today consider him one of the founders of sociology, the scientific study of how societies work."
+   ],
+   "lesson": "Ibn Khaldun teaches children that watching carefully and asking \"why does this keep happening?\" can uncover patterns that explain the world around us. Sometimes the most important discoveries come not from a lab, but from paying close attention to people."
+  },
+  {
+   "name": "Rumi",
+   "area": "Poetry & Spirituality",
+   "cat": "gentle",
+   "obj": "ney",
+   "wear": "sikke",
+   "robe": "#DED4EE",
+   "wc": "#FDFAF5",
+   "tint": "#DED4EE",
+   "paras": [
+    "Jalal al-Din Rumi was already a respected religious scholar and teacher when he met a wandering mystic named Shams-e Tabrizi. Their friendship changed him deeply, awakening a depth of love and spiritual passion that Rumi began pouring into poetry.",
+    "He described the experience of connecting with God through movement, turning gently in circles as a form of remembrance and prayer, a practice that grew into what we now call the whirling dervishes.",
+    "Rumi's most famous work, a long poem called the Masnavi, uses simple stories and everyday images to explore love, patience, and the connection between people and God. His poems have been translated into dozens of languages, and today, more than 750 years after his death, he remains one of the most widely read poets in the world."
+   ],
+   "lesson": "Rumi teaches children that big feelings, like love and wonder, don't have to be hidden away. When we turn our feelings into art, whether through poetry, music, or movement, we can create something that comforts and connects people across centuries and cultures."
+  },
+  {
+   "name": "Mimar Sinan",
+   "area": "Architecture",
+   "cat": "makers",
+   "obj": "dome",
+   "wear": "turban",
+   "robe": "#CFE4DA",
+   "wc": "#CBDDEF",
+   "tint": "#CFE4DA",
+   "paras": [
+    "Mimar Sinan trained for years as a military engineer before becoming chief architect for the Ottoman sultans, and he took his new role seriously. He wanted to build structures that would still be standing hundreds of years later.",
+    "His greatest challenge was building enormous domes, wide, heavy stone ceilings that needed careful engineering to keep from collapsing. Sinan studied older buildings like the Hagia Sophia, then found new ways to spread the weight more safely, which let him build the massive dome of the Süleymaniye Mosque and, later, his personal masterpiece, the Selimiye Mosque in Edirne.",
+    "Sinan kept building and designing into his nineties, eventually overseeing hundreds of mosques, bridges, schools, and public buildings across the Ottoman Empire during a career that lasted around fifty years."
+   ],
+   "lesson": "Sinan teaches children that mastery takes time, and that's okay. He didn't stop learning after his first success. He spent an entire lifetime getting better at his craft, and today, engineers still study his domes to understand how he built things both beautiful and strong enough to last for centuries."
+  },
+  {
+   "name": "Al-Farabi",
+   "area": "Philosophy & Music Theory",
+   "cat": "thinkers",
+   "obj": "oud",
+   "wear": "turban",
+   "robe": "#CBDDEF",
+   "wc": "#F3DCC4",
+   "tint": "#CBDDEF",
+   "paras": [
+    "Al-Farabi loved learning so much that people eventually gave him an extraordinary nickname: \"the Second Teacher,\" ranking him just below Aristotle, who was known simply as \"the First Teacher.\"",
+    "Al-Farabi wrote about many subjects side by side: logic, politics, and philosophy, imagining what a truly just and well-run society, which he called \"the Virtuous City,\" might look like. But he didn't stop with philosophy. Al-Farabi was also a serious music scholar, writing one of the most detailed studies of music theory and instruments of his time, explaining how sound, rhythm, and harmony actually worked.",
+    "He believed that careful, disciplined thinking could improve nearly every part of life, from government to art."
+   ],
+   "lesson": "Al-Farabi shows children that being brilliant in one subject doesn't mean you have to ignore others. He studied philosophy and music with the same seriousness and curiosity, believing that truly understanding the world meant exploring it from many different angles at once."
+  },
+  {
+   "name": "Al-Idrisi",
+   "area": "Geography & Cartography",
+   "cat": "explorers",
+   "obj": "map",
+   "wear": "turban",
+   "robe": "#F7DFA0",
+   "wc": "#CBDDEF",
+   "tint": "#F7DFA0",
+   "paras": [
+    "Al-Idrisi grew up loving maps and travel, and eventually his skills brought him to an unusual place: the court of King Roger II, a Christian king who ruled the island of Sicily.",
+    "Roger wanted the most accurate map of the world ever created, and he trusted Al-Idrisi, a Muslim scholar, to lead the project. For years, Al-Idrisi carefully combined information from Arab travelers, Greek geography, and reports from merchants and sailors from many different lands, checking every detail he could for accuracy. The result, completed in 1154 and called the Tabula Rogeriana, became the most detailed and reliable map of the known world at the time.",
+    "European explorers relied on Al-Idrisi's map and geographic descriptions for centuries afterward, long after both he and King Roger had passed away."
+   ],
+   "lesson": "Al-Idrisi teaches children that some of the greatest achievements happen when people from different backgrounds and beliefs work together toward a shared goal. He and King Roger came from different faiths and cultures, but their partnership produced a map that helped guide the entire world."
+  },
+  {
+   "name": "Suleiman the Magnificent",
+   "area": "Governance & Law",
+   "cat": "leaders",
+   "obj": "lawscroll",
+   "wear": "sultan",
+   "robe": "#CFE4DA",
+   "wc": "#FDFAF5",
+   "tint": "#CFE4DA",
+   "paras": [
+    "Suleiman ruled the Ottoman Empire for 46 years, longer than any sultan before or after him, and he earned two very different nicknames depending on who was talking about him. In Europe, he was called \"the Magnificent\" for his empire's wealth and power. His own people called him \"Kanuni,\" the Lawgiver.",
+    "That second nickname was the one Suleiman valued most. He spent much of his reign carefully reorganizing the empire's laws, working to make taxes, courts, and land ownership fairer and more consistent for ordinary people, not only the wealthy.",
+    "Suleiman was also a generous supporter of the arts, funding the architect Mimar Sinan's greatest mosques and encouraging poetry, calligraphy, and learning throughout his empire."
+   ],
+   "lesson": "Suleiman teaches children that being a great leader isn't just about how large or wealthy a kingdom becomes. It's about whether its rules are fair to everyone living in it. Sometimes the title people are proudest of isn't the grandest-sounding one, but the one that reflects genuine care for others."
+  },
+  {
+   "name": "Akbar the Great",
+   "area": "Governance & Religious Pluralism",
+   "cat": "leaders",
+   "obj": "gathering",
+   "wear": "crown",
+   "robe": "#F6D7DD",
+   "wc": "#FDFAF5",
+   "tint": "#F6D7DD",
+   "paras": [
+    "Akbar became emperor of a vast empire in India while still a teenager, ruling over millions of people who followed many different religions.",
+    "Rather than force everyone to think or believe the same way, Akbar made an unusual choice for a ruler of his time. He ended a tax that had unfairly targeted non-Muslims, built alliances with Hindu families through marriage and trust, and created a special hall where scholars of different faiths, Hindu, Muslim, Christian, Zoroastrian, and others, were invited to sit together and respectfully discuss their beliefs in front of him.",
+    "Akbar wanted to genuinely understand what people of other faiths believed, instead of assuming he already knew, and he protected everyone's right to worship freely across his empire."
+   ],
+   "lesson": "Akbar teaches children that real strength as a leader includes curiosity and respect for people who are different from you. Listening carefully to others, instead of insisting you're always right, can build a stronger, more peaceful community for everyone."
+  },
+  {
+   "name": "Sa'd ibn Abi Waqqas",
+   "area": "Military Leadership & Faith",
+   "cat": "brave",
+   "obj": "bow",
+   "wear": "helmet",
+   "robe": "#DED4EE",
+   "wc": "#FDFAF5",
+   "tint": "#DED4EE",
+   "paras": [
+    "Sa'd ibn Abi Waqqas became Muslim while still a teenager, one of the very first people to accept the message of Islam. His own mother was so upset by his choice that she stopped eating, hoping it would make her son change his mind.",
+    "Sa'd faced an incredibly hard moment. He loved his mother deeply and it hurt him to see her in pain, but he would not give up his faith, even to ease her suffering. He gently but firmly told her that he loved her and would always care for her with kindness, but he could not abandon what he knew to be true. Seeing his firm, gentle resolve, his mother eventually began eating again, and he continued to treat her with love and respect for the rest of her life.",
+    "Sa'd later became a respected military commander, leading forces to victory at the Battle of al-Qadisiyyah and founding the city of Kufa."
+   ],
+   "lesson": "Sa'd teaches children a hard but important lesson: you can stay true to your own beliefs while still loving and honoring people who see things differently, especially your own family."
+  }
+ ],
+ "pronunciations": {
+  "Khadijah": "Ka-deeja",
+  "Khuwaylid": "Koo-waylid",
+  "Nusaybah": "Noo-sayba",
+  "Ka'ab": "Kah-ab",
+  "al-Ansariyyah": "al Ansaareeya",
+  "Khalid": "Kaalid",
+  "al-Walid": "al Waleed",
+  "Walid": "Waleed",
+  "Saifullah": "Sayfullah",
+  "Yarmouk": "Yar-mook",
+  "Uhud": "Oo-hud",
+  "Umar": "Oo-mar",
+  "Khattab": "Kattaab",
+  "Medina": "Ma-deena",
+  "Mecca": "Mekka",
+  "Rabia": "Raabia",
+  "al-Adawiyya": "al Ada-weeya",
+  "Basra": "Basra",
+  "Al-Khwarizmi": "al Kwaa-rizmee",
+  "Khwarizmi": "Kwaa-rizmee",
+  "Fatima": "Faatima",
+  "al-Fihri": "al Fih-ree",
+  "Fihri": "Fih-ree",
+  "Qarawiyyin": "Kara-weeyeen",
+  "Fez": "Fezz",
+  "Tulun": "Too-loon",
+  "Al-Zahrawi": "az Zah-raawee",
+  "Zahrawi": "Zah-raawee",
+  "Al-Tasrif": "at Tas-reef",
+  "Cordoba": "Kor-doba",
+  "Haytham": "Hay-thum",
+  "Sina": "See-na",
+  "Bukhara": "Boo-kaara",
+  "Al-Jazari": "al Ja-zaree",
+  "Jazari": "Ja-zaree",
+  "Jerusalem": "Jerusalem",
+  "Mansa": "Man-sa",
+  "Musa": "Moo-sa",
+  "Timbuktu": "Tim-buck-too",
+  "Mali": "Maalee",
+  "Battuta": "Ba-toota",
+  "Rihla": "Rih-la",
+  "Tangier": "Tan-jeer",
+  "Ali": "Alee",
+  "Abi": "Abee",
+  "Talib": "Taalib",
+  "Kufa": "Koofa",
+  "Uthman": "Ooth-maan",
+  "Affan": "Af-faan",
+  "Amr": "Ahmr",
+  "Fustat": "Foo-staat",
+  "Al-Kindi": "al Kin-dee",
+  "Kindi": "Kin-dee",
+  "Al-Ghazali": "al Ga-zaalee",
+  "Ghazali": "Ga-zaalee",
+  "Rushd": "Rooshd",
+  "Jabir": "Jaabir",
+  "Hayyan": "Hay-yaan",
+  "Al-Biruni": "al Bee-roonee",
+  "Biruni": "Bee-roonee",
+  "Nafis": "Na-fees",
+  "Maryam": "Mar-yam",
+  "al-Ijliya": "al Ij-leeya",
+  "al-Astrulabi": "al Astro-laabee",
+  "Aleppo": "A-leppo",
+  "Khayyam": "Kai-yaam",
+  "Rubaiyat": "Roo-bye-yaat",
+  "Jalali": "Ja-laalee",
+  "Nishapur": "Nee-sha-poor",
+  "Nasir": "Naasir",
+  "al-Din": "ad Deen",
+  "Al-Tusi": "at Toosee",
+  "Tusi": "Toosee",
+  "Maragheh": "Ma-raa-ga",
+  "Khaldun": "Kal-doon",
+  "Muqaddimah": "Moo-kaddima",
+  "Rumi": "Roo-mee",
+  "Masnavi": "Mas-navee",
+  "Shams-e": "Shams e",
+  "Tabrizi": "Tab-reezee",
+  "Konya": "Kon-ya",
+  "Mimar": "Mee-mar",
+  "Sinan": "Si-naan",
+  "Selimiye": "Seli-mee-ye",
+  "Edirne": "Ed-eer-ne",
+  "Hagia": "Hah-yee-a",
+  "Al-Farabi": "al Faa-raabee",
+  "Farabi": "Faa-raabee",
+  "Al-Idrisi": "al Id-reesee",
+  "Idrisi": "Id-reesee",
+  "Sicily": "Sissily",
+  "Suleiman": "Soo-lay-maan",
+  "Akbar": "Ak-bar",
+  "Sa'd": "Sahd",
+  "Waqqas": "Wa-kaas",
+  "Qadisiyyah": "Kaadi-seeya",
+  "Bi'r": "Beer",
+  "Ruma": "Rooma",
+  "Quran": "Koor-aan",
+  "Muhammad": "Mu-hammad",
+  "Ibn": "ibn",
+  "Persia": "Persia",
+  "Baghdad": "Bag-daad",
+  "Damascus": "Da-mascus",
+  "Isfahan": "Is-fa-haan",
+  "Samarkand": "Sam-ar-kand",
+  "Andalusia": "Anda-loosia",
+  "Ottoman": "Ottoman",
+  "Crusader": "Croo-sader",
+  "Aquinas": "A-kwy-nas",
+  "Copernicus": "Ko-per-nikus"
+ }
+}
