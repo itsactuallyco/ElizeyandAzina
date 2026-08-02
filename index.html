@@ -467,9 +467,6 @@ document.addEventListener('keydown',e=>{
 const synth=window.speechSynthesis;
 let AUDIO={}, curPerson=null;
 let chosenVoice=null, speaking=false, paused=false, mode=null, queue=[], qi=0;
-const player=new Audio();   /* one element, reused — iOS only allows playback
-                               on an element first started by a real tap */
-player.preload='auto';
 
 const FEMALE_US=['samantha','ava','allison','susan','nicky','zoe','joanna','salli','kendra','kimberly',
   'aria','jenny','michelle','ana','google us english','microsoft zira','victoria','karen','moira','fiona','tessa'];
@@ -499,75 +496,102 @@ if(synth){ pickVoice(); synth.onvoiceschanged=pickVoice; }
 function highlight(n){
   pageEl.querySelectorAll('p').forEach((el,k)=>el.classList.toggle('reading',k===n));
 }
-function stopSpeech(){
-  if(synth) synth.cancel();
-  player.pause();
-  try{ player.removeAttribute('src'); player.load(); }catch(e){}
-  speaking=false; paused=false; mode=null; queue=[]; qi=0;
-  readBtn.classList.remove('playing','paused'); readLabel.textContent='Read to me';
-  highlight(-1);
-  if('mediaSession' in navigator) navigator.mediaSession.playbackState='none';
+function readableParas(){
+  return [...pageEl.querySelectorAll('p')].map(el=>el.textContent.trim()).filter(Boolean);
 }
 
-/* called when a story finishes on its own (not stopped/paused by the
-   user) — hands off to Keep Playing if it's switched on */
-function queueFinished(){
-  stopSpeech();
-  if(keepPlaying) advanceKeepPlaying();
-}
+/* ---- Web Audio engine ----
+   A person's clips are decoded up front and scheduled back-to-back on
+   one continuously-running audio clock, instead of being started one
+   at a time with a fresh play()+network-fetch at every paragraph
+   boundary. That per-boundary fetch was the actual cause of playback
+   dying with the screen off: the current clip (already loaded) kept
+   playing fine, but the phone starves a *new* request right as the
+   next one was due to start. Scheduling everything ahead of time
+   means there's nothing left to fetch at the boundary, and pausing is
+   just suspending the one shared clock — no per-clip bookkeeping. */
+let actx=null, audioEpoch=0, scheduledSources=[], failedAt=null;
+const bufferCache=new Map();
 
-/* ---- recorded narration ---- */
-function playClip(){
-  if(qi>=queue.length){ queueFinished(); return; }
-  mode='audio';
-  highlight(qi);
-  player.src='audio/'+queue[qi];
-  attemptPlay();
-  prefetchNext();
+function ensureCtx(){
+  if(actx) return actx;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  actx=AC?new AC():null;
+  return actx;
 }
-
-/* the screen-lock boundary: a paragraph that's already loaded keeps
-   playing fine, but the phone can briefly starve a *new* fetch right
-   as the next clip starts. A couple of quick retries rides that out
-   instead of giving up and falling back to a browser voice that
-   won't speak with the screen off anyway. */
-function attemptPlay(retry){
-  retry=retry||0;
-  player.play().catch(err=>{
-    if(!speaking || paused) return;
-    if(retry<4){ setTimeout(()=>attemptPlay(retry+1), 500*(retry+1)); }
-    else { console.warn('audio failed after retries, using browser voice',err); fallbackFrom(qi); }
-  });
+async function getBuffer(url){
+  if(bufferCache.has(url)) return bufferCache.get(url);
+  const res=await fetch(url);
+  if(!res.ok) throw new Error('fetch failed: '+res.status);
+  const arr=await res.arrayBuffer();
+  const buf=await actx.decodeAudioData(arr);
+  bufferCache.set(url,buf);
+  if(bufferCache.size>80) bufferCache.delete(bufferCache.keys().next().value);
+  return buf;
 }
-player.addEventListener('ended',()=>{ if(!speaking || paused) return; qi++; playClip(); });
-player.addEventListener('error',()=>{ if(speaking && !paused) fallbackFrom(qi); });
-
-/* pre-fetch the next clip (or, on a person's last clip with Keep Playing
-   on, the next person's first clip) while this one is still playing —
-   audio/* is cached for a year (see _headers), so by the time playback
-   reaches the boundary the file is already sitting in the browser's
-   cache and needs no live network request to keep going. */
-let prefetchPool=[];
-function prefetchUrl(url){
-  if(!url) return;
-  const a=new Audio(); a.preload='auto'; a.src=url;
-  prefetchPool.push(a);
-  if(prefetchPool.length>3) prefetchPool.shift();
+function stopAudioEngine(){
+  audioEpoch++;
+  scheduledSources.forEach(src=>{ try{ src.onended=null; src.stop(); }catch(e){} });
+  scheduledSources=[];
 }
-function prefetchNext(){
-  if(qi+1<queue.length){ prefetchUrl('audio/'+queue[qi+1]); return; }
-  if(!keepPlaying || !curPerson) return;
+/* fire-and-forget cache warm-up, used for the next person under Keep Playing */
+function predecode(urls){
+  if(!ensureCtx()) return;
+  urls.forEach(u=>getBuffer(u).catch(()=>{}));
+}
+function predecodeNextPerson(){
+  if(!curPerson) return;
   const curGlobalIdx=PEOPLE.indexOf(curPerson);
   if(!shuffleBag.length) shuffleBag=shuffled(curGlobalIdx);
   const upNext=PEOPLE[shuffleBag[0]];
-  const clips=upNext ? (AUDIO[upNext.name]||[]) : [];
-  if(clips.length) prefetchUrl('audio/'+clips[0]);
+  const clips=upNext?(AUDIO[upNext.name]||[]):[];
+  if(clips.length) predecode(clips.map(c=>'audio/'+c));
+}
+
+async function playAudioQueue(){
+  const ctx=ensureCtx();
+  if(!ctx){ mode='speech'; queue=readableParas(); if(!chosenVoice) pickVoice(); speakNext(); return; }
+  if(ctx.state==='suspended'){ try{ await ctx.resume(); }catch(e){} }
+  const myEpoch=++audioEpoch, startQi=qi;
+  failedAt=null;
+  mode='audio';
+  highlight(qi);
+  let t=ctx.currentTime+0.12;
+  for(let i=startQi;i<queue.length;i++){
+    let buf;
+    try{ buf=await getBuffer('audio/'+queue[i]); }
+    catch(err){
+      if(myEpoch!==audioEpoch) return;
+      console.warn('recorded clip missing/blocked, will finish with browser voice from here',err);
+      failedAt=i;
+      break;
+    }
+    if(myEpoch!==audioEpoch) return;
+    const src=ctx.createBufferSource();
+    src.buffer=buf; src.connect(ctx.destination);
+    src.start(t);
+    scheduledSources.push(src);
+    const clipIdx=i;
+    src.onended=()=>{
+      if(myEpoch!==audioEpoch) return;
+      const next=clipIdx+1;
+      if(next===failedAt){ fallbackFrom(next); return; }
+      qi=next;
+      if(next>=queue.length){ queueFinished(); return; }
+      highlight(next);
+    };
+    t+=buf.duration;
+    if(keepPlaying && i===queue.length-1) predecodeNextPerson();
+  }
+  if(failedAt===startQi && myEpoch===audioEpoch) fallbackFrom(failedAt);
 }
 
 /* if a clip is missing or blocked, finish the story with the browser voice */
 function fallbackFrom(n){
-  const paras=[...pageEl.querySelectorAll('p')].map(el=>el.textContent.trim()).filter(Boolean);
-  queue=paras.slice(n); qi=0; speakNext();
+  stopAudioEngine();
+  queue=readableParas().slice(n); qi=0;
+  if(!chosenVoice) pickVoice();
+  speakNext();
 }
 
 /* ---- browser voice ---- */
@@ -583,17 +607,33 @@ function speakNext(){
   synth.speak(u);
 }
 
+function stopSpeech(){
+  if(synth) synth.cancel();
+  stopAudioEngine();
+  speaking=false; paused=false; mode=null; queue=[]; qi=0; failedAt=null;
+  readBtn.classList.remove('playing','paused'); readLabel.textContent='Read to me';
+  highlight(-1);
+  if('mediaSession' in navigator) navigator.mediaSession.playbackState='none';
+}
+
+/* called when a story finishes on its own (not stopped/paused by the
+   user) — hands off to Keep Playing if it's switched on */
+function queueFinished(){
+  stopSpeech();
+  if(keepPlaying) advanceKeepPlaying();
+}
+
 function pauseSpeech(){
   if(!speaking || paused) return;
   paused=true;
-  if(mode==='audio') player.pause(); else if(synth) synth.pause();
+  if(mode==='audio'){ if(actx) actx.suspend(); } else if(synth) synth.pause();
   readBtn.classList.remove('playing'); readBtn.classList.add('paused'); readLabel.textContent='Resume';
   if('mediaSession' in navigator) navigator.mediaSession.playbackState='paused';
 }
 function resumeSpeech(){
   if(!speaking || !paused) return;
   paused=false;
-  if(mode==='audio') attemptPlay(); else if(synth) synth.resume();
+  if(mode==='audio'){ if(actx) actx.resume(); } else if(synth) synth.resume();
   readBtn.classList.remove('paused'); readBtn.classList.add('playing'); readLabel.textContent='Pause';
   if('mediaSession' in navigator) navigator.mediaSession.playbackState='playing';
 }
@@ -641,14 +681,13 @@ if('mediaSession' in navigator){
 }
 
 function startReading(){
-  const paras=[...pageEl.querySelectorAll('p')].map(el=>el.textContent.trim()).filter(Boolean);
   const clips=curPerson ? (AUDIO[curPerson.name]||[]) : [];
   if(!clips.length && !synth){ readLabel.textContent='Not available'; return; }
   speaking=true; paused=false; qi=0;
   readBtn.classList.add('playing'); readBtn.classList.remove('paused'); readLabel.textContent='Pause';
   updateMediaSession();
-  if(clips.length){ queue=clips; playClip(); }
-  else { if(!chosenVoice) pickVoice(); queue=paras; speakNext(); }
+  if(clips.length){ queue=clips; playAudioQueue(); }
+  else { queue=readableParas(); if(!chosenVoice) pickVoice(); speakNext(); }
 }
 
 readBtn.addEventListener('click',()=>{
