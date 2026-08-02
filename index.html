@@ -127,7 +127,17 @@ button:focus-visible{outline:4px solid var(--ink); outline-offset:3px; border-ra
 .big-btn.read.recorded{background:#CFE4DA; color:#2E5F55;}
 .big-btn.read.recorded.playing{background:var(--blossom); color:#7A3546;}
 .big-btn.nav{flex:0 0 var(--tap); background:var(--paper); color:var(--ink);}
+.big-btn.read.paused{background:var(--saffron); color:#7A5C05;}
 .big-btn[disabled]{opacity:.34; pointer-events:none;}
+
+.controls2{display:flex; justify-content:center; padding:0 16px 14px; flex:none;}
+.keep-toggle{position:relative; display:flex; align-items:center; gap:10px; font-size:.88rem; font-weight:400; color:var(--ink-soft); padding:6px 4px; cursor:pointer;}
+.keep-toggle .switch{position:relative; width:44px; height:26px; border-radius:999px; background:#D8E3DF; transition:background .2s ease; flex:none;}
+.keep-toggle .switch::after{content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .2s ease;}
+.keep-toggle input{position:absolute; inset:0; z-index:1; opacity:0; margin:0; width:44px; height:26px; cursor:pointer;}
+.keep-toggle input:checked + .switch{background:var(--mint-deep);}
+.keep-toggle input:checked + .switch::after{transform:translateX(18px);}
+.keep-toggle input:focus-visible + .switch{outline:4px solid var(--ink); outline-offset:3px;}
 
 @media(min-width:620px){.page{padding:32px 42px 38px;} .page .scene{width:180px;height:180px;}}
 .loadstate{text-align:center; padding:26px 20px 50px; font-size:1rem; font-weight:300; color:var(--ink-soft); line-height:1.6;}
@@ -199,6 +209,13 @@ button:focus-visible{outline:4px solid var(--ink); outline-offset:3px; border-ra
     <button class="big-btn nav" id="nextPerson" aria-label="Next person">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
     </button>
+  </div>
+  <div class="controls2">
+    <label class="keep-toggle">
+      <input type="checkbox" id="keepPlayingToggle">
+      <span class="switch" aria-hidden="true"></span>
+      Keep Playing
+    </label>
   </div>
 </section>
 
@@ -346,7 +363,7 @@ CATS.forEach(c=>{
 document.getElementById('total').textContent = PEOPLE.length;
 }
 
-function openCat(c){
+function openCat(c, fromHistory){
   curCat=c;
   listTitle.textContent=c.name;
   listSub.textContent=c.blurb;
@@ -362,20 +379,45 @@ function openCat(c){
     b.addEventListener('click',()=>openStory(i));
     peopleGrid.appendChild(b);
   });
+  storyEl.hidden=true; storyEl.classList.remove('show');
   homeEl.hidden=true; listEl.hidden=false;
+  document.body.style.overflow='';
   window.scrollTo({top:0});
+  if(!fromHistory) history.pushState({screen:'list', catId:c.id}, '', location.href);
 }
 
-document.getElementById('listBack').addEventListener('click',()=>{
-  listEl.hidden=true; homeEl.hidden=false; window.scrollTo({top:0});
-});
+document.getElementById('listBack').addEventListener('click',()=>{ history.back(); });
 
-function openStory(i){
+function openStory(i, fromHistory){
   curIdx=curOrder.indexOf(i);
   renderStory(i);
   listEl.hidden=true; storyEl.hidden=false; storyEl.classList.add('show');
   document.body.style.overflow='hidden';
+  if(!fromHistory) history.pushState({screen:'story', catId:curCat.id, idx:i}, '', location.href);
 }
+
+/* ---- browser back/forward moves through home -> list -> story instead of leaving the site ---- */
+history.replaceState({screen:'home'}, '', location.href);
+window.addEventListener('popstate', e=>{
+  const st = e.state || {screen:'home'};
+  if(st.screen==='story'){
+    const cat = CATS.find(c=>c.id===st.catId);
+    if(!cat) return;
+    if(!curCat || curCat.id!==cat.id) openCat(cat, true);
+    openStory(st.idx, true);
+  } else if(st.screen==='list'){
+    const cat = CATS.find(c=>c.id===st.catId);
+    if(!cat) return;
+    stopSpeech();
+    openCat(cat, true);
+  } else {
+    stopSpeech();
+    storyEl.hidden=true; storyEl.classList.remove('show');
+    listEl.hidden=true; homeEl.hidden=false;
+    document.body.style.overflow='';
+    window.scrollTo({top:0});
+  }
+});
 
 function renderStory(i){
   stopSpeech();
@@ -393,13 +435,22 @@ function renderStory(i){
   nextBtn.disabled = curIdx>=curOrder.length-1;
 }
 
-document.getElementById('storyBack').addEventListener('click',()=>{
-  stopSpeech();
-  storyEl.hidden=true; storyEl.classList.remove('show');
-  listEl.hidden=false; document.body.style.overflow='';
-});
-prevBtn.addEventListener('click',()=>{ if(curIdx>0){curIdx--; renderStory(curOrder[curIdx]);} });
-nextBtn.addEventListener('click',()=>{ if(curIdx<curOrder.length-1){curIdx++; renderStory(curOrder[curIdx]);} });
+/* used by the prev/next arrows and by "Keep Playing" auto-advance —
+   doesn't push a new history entry, so back still lands on the list */
+function goToPerson(gi){
+  const p = PEOPLE[gi];
+  if(curCat.id !== p.cat){
+    curCat = CATS.find(c=>c.id===p.cat) || curCat;
+    curOrder = PEOPLE.map((pp,idx)=>idx).filter(idx=>PEOPLE[idx].cat===curCat.id);
+  }
+  curIdx = curOrder.indexOf(gi);
+  renderStory(gi);
+  history.replaceState({screen:'story', catId:curCat.id, idx:gi}, '', location.href);
+}
+
+document.getElementById('storyBack').addEventListener('click',()=>{ history.back(); });
+prevBtn.addEventListener('click',()=>{ if(curIdx>0){curIdx--; goToPerson(curOrder[curIdx]);} });
+nextBtn.addEventListener('click',()=>{ if(curIdx<curOrder.length-1){curIdx++; goToPerson(curOrder[curIdx]);} });
 
 document.addEventListener('keydown',e=>{
   if(storyEl.hidden) return;
@@ -414,7 +465,7 @@ document.addEventListener('keydown',e=>{
    ============================================================ */
 const synth=window.speechSynthesis;
 let AUDIO={}, curPerson=null;
-let chosenVoice=null, speaking=false, queue=[], qi=0;
+let chosenVoice=null, speaking=false, paused=false, mode=null, queue=[], qi=0;
 const player=new Audio();   /* one element, reused — iOS only allows playback
                                on an element first started by a real tap */
 player.preload='auto';
@@ -451,21 +502,30 @@ function stopSpeech(){
   if(synth) synth.cancel();
   player.pause();
   try{ player.removeAttribute('src'); player.load(); }catch(e){}
-  speaking=false; queue=[]; qi=0;
-  readBtn.classList.remove('playing'); readLabel.textContent='Read to me';
+  speaking=false; paused=false; mode=null; queue=[]; qi=0;
+  readBtn.classList.remove('playing','paused'); readLabel.textContent='Read to me';
   highlight(-1);
+  if('mediaSession' in navigator) navigator.mediaSession.playbackState='none';
+}
+
+/* called when a story finishes on its own (not stopped/paused by the
+   user) — hands off to Keep Playing if it's switched on */
+function queueFinished(){
+  stopSpeech();
+  if(keepPlaying) advanceKeepPlaying();
 }
 
 /* ---- recorded narration ---- */
 function playClip(){
-  if(qi>=queue.length){ stopSpeech(); return; }
+  if(qi>=queue.length){ queueFinished(); return; }
+  mode='audio';
   highlight(qi);
   player.src='audio/'+queue[qi];
   player.play().catch(err=>{ console.warn('audio failed, using browser voice',err);
                              fallbackFrom(qi); });
 }
-player.addEventListener('ended',()=>{ if(!speaking) return; qi++; playClip(); });
-player.addEventListener('error',()=>{ if(speaking) fallbackFrom(qi); });
+player.addEventListener('ended',()=>{ if(!speaking || paused) return; qi++; playClip(); });
+player.addEventListener('error',()=>{ if(speaking && !paused) fallbackFrom(qi); });
 
 /* if a clip is missing or blocked, finish the story with the browser voice */
 function fallbackFrom(n){
@@ -475,26 +535,89 @@ function fallbackFrom(n){
 
 /* ---- browser voice ---- */
 function speakNext(){
-  if(!synth || qi>=queue.length){ stopSpeech(); return; }
+  if(!synth || qi>=queue.length){ queueFinished(); return; }
+  mode='speech';
   highlight(qi);
   const u=new SpeechSynthesisUtterance(speakable(queue[qi]));
   if(chosenVoice) u.voice=chosenVoice;
   u.lang='en-US'; u.rate=0.84; u.pitch=1.12; u.volume=1;
-  u.onend=()=>{ qi++; setTimeout(speakNext,420); };
+  u.onend=()=>{ if(paused) return; qi++; setTimeout(speakNext,420); };
   u.onerror=stopSpeech;
   synth.speak(u);
 }
 
-readBtn.addEventListener('click',()=>{
-  if(speaking){ stopSpeech(); return; }
+function pauseSpeech(){
+  if(!speaking || paused) return;
+  paused=true;
+  if(mode==='audio') player.pause(); else if(synth) synth.pause();
+  readBtn.classList.remove('playing'); readBtn.classList.add('paused'); readLabel.textContent='Resume';
+  if('mediaSession' in navigator) navigator.mediaSession.playbackState='paused';
+}
+function resumeSpeech(){
+  if(!speaking || !paused) return;
+  paused=false;
+  if(mode==='audio') player.play().catch(()=>fallbackFrom(qi)); else if(synth) synth.resume();
+  readBtn.classList.remove('paused'); readBtn.classList.add('playing'); readLabel.textContent='Pause';
+  if('mediaSession' in navigator) navigator.mediaSession.playbackState='playing';
+}
+
+/* ============================================================
+   KEEP PLAYING — random shuffle through everyone, no repeats
+   until the whole roster has had a turn.
+   ============================================================ */
+let keepPlaying=false, shuffleBag=[];
+const keepPlayingToggle=document.getElementById('keepPlayingToggle');
+keepPlayingToggle.addEventListener('change',()=>{ keepPlaying=keepPlayingToggle.checked; });
+
+function shuffled(excludeIdx){
+  const idxs=PEOPLE.map((_,i)=>i).filter(i=>i!==excludeIdx);
+  for(let i=idxs.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [idxs[i],idxs[j]]=[idxs[j],idxs[i]];
+  }
+  return idxs;
+}
+function advanceKeepPlaying(){
+  const curGlobalIdx=PEOPLE.indexOf(curPerson);
+  if(!shuffleBag.length) shuffleBag=shuffled(curGlobalIdx);
+  const gi=shuffleBag.shift();
+  goToPerson(gi);
+  startReading();
+}
+
+/* ============================================================
+   MEDIA SESSION — lock-screen/notification controls, and part of
+   what lets recorded narration keep playing with the screen off.
+   ============================================================ */
+function updateMediaSession(){
+  if(!('mediaSession' in navigator) || !curPerson) return;
+  navigator.mediaSession.metadata=new MediaMetadata({
+    title:curPerson.name, artist:"Baji's Story Garden", album:curPerson.area
+  });
+  navigator.mediaSession.playbackState='playing';
+}
+if('mediaSession' in navigator){
+  navigator.mediaSession.setActionHandler('play',()=>{ paused?resumeSpeech():startReading(); });
+  navigator.mediaSession.setActionHandler('pause',()=>pauseSpeech());
+  navigator.mediaSession.setActionHandler('previoustrack',()=>prevBtn.click());
+  navigator.mediaSession.setActionHandler('nexttrack',()=>nextBtn.click());
+}
+
+function startReading(){
   const paras=[...pageEl.querySelectorAll('p')].map(el=>el.textContent.trim()).filter(Boolean);
   const clips=curPerson ? (AUDIO[curPerson.name]||[]) : [];
   if(!clips.length && !synth){ readLabel.textContent='Not available'; return; }
-  speaking=true; qi=0;
-  readBtn.classList.add('playing'); readLabel.textContent='Stop';
-  if(clips.length>=paras.length){ queue=clips; playClip(); }
-  else if(clips.length){ queue=clips; playClip(); }
+  speaking=true; paused=false; qi=0;
+  readBtn.classList.add('playing'); readBtn.classList.remove('paused'); readLabel.textContent='Pause';
+  updateMediaSession();
+  if(clips.length){ queue=clips; playClip(); }
   else { if(!chosenVoice) pickVoice(); queue=paras; speakNext(); }
+}
+
+readBtn.addEventListener('click',()=>{
+  if(paused){ resumeSpeech(); return; }
+  if(speaking){ pauseSpeech(); return; }
+  startReading();
 });
 
 window.addEventListener('beforeunload',()=>{ if(synth) synth.cancel(); });
