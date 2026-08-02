@@ -510,13 +510,29 @@ function readableParas(){
    next one was due to start. Scheduling everything ahead of time
    means there's nothing left to fetch at the boundary, and pausing is
    just suspending the one shared clock — no per-clip bookkeeping. */
-let actx=null, audioEpoch=0, scheduledSources=[], failedAt=null;
+let actx=null, actxOut=null, audioEpoch=0, scheduledSources=[], failedAt=null;
 const bufferCache=new Map();
 
+/* the recorded clips come out of the TTS provider quiet (peaks measured
+   across the whole audio/ folder top out around -9.5 dBFS, well below
+   the 0 dBFS ceiling) — a flat makeup gain brings that up to a normal
+   narration loudness; a fast limiter after it is just a safety net in
+   case a future clip (different voice/provider) turns out louder than
+   anything measured here, so it stays silent for today's audio. */
+function buildOutputChain(ctx){
+  const makeup=ctx.createGain();
+  makeup.gain.value=2.5; // ~+8dB — verified clip-free against the whole audio/ folder
+  const limiter=ctx.createDynamicsCompressor();
+  limiter.threshold.value=-1; limiter.knee.value=0; limiter.ratio.value=20;
+  limiter.attack.value=0.001; limiter.release.value=0.1;
+  makeup.connect(limiter); limiter.connect(ctx.destination);
+  return makeup;
+}
 function ensureCtx(){
   if(actx) return actx;
   const AC=window.AudioContext||window.webkitAudioContext;
   actx=AC?new AC():null;
+  if(actx) actxOut=buildOutputChain(actx);
   return actx;
 }
 async function getBuffer(url){
@@ -568,7 +584,7 @@ async function playAudioQueue(){
     }
     if(myEpoch!==audioEpoch) return;
     const src=ctx.createBufferSource();
-    src.buffer=buf; src.connect(ctx.destination);
+    src.buffer=buf; src.connect(actxOut);
     src.start(t);
     scheduledSources.push(src);
     const clipIdx=i;
