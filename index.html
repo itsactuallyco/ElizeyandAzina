@@ -211,11 +211,12 @@ button:focus-visible{outline:4px solid var(--ink); outline-offset:3px; border-ra
     </button>
   </div>
   <div class="controls2">
-    <label class="keep-toggle">
-      <input type="checkbox" id="keepPlayingToggle">
+    <label class="keep-toggle" title="Stories will continue to be narrated from one character to another, until you pause.">
+      <input type="checkbox" id="keepPlayingToggle" aria-describedby="keepPlayingHint">
       <span class="switch" aria-hidden="true"></span>
       Keep Playing
     </label>
+    <span id="keepPlayingHint" hidden>Stories will continue to be narrated from one character to another, until you pause.</span>
   </div>
 </section>
 
@@ -521,11 +522,47 @@ function playClip(){
   mode='audio';
   highlight(qi);
   player.src='audio/'+queue[qi];
-  player.play().catch(err=>{ console.warn('audio failed, using browser voice',err);
-                             fallbackFrom(qi); });
+  attemptPlay();
+  prefetchNext();
+}
+
+/* the screen-lock boundary: a paragraph that's already loaded keeps
+   playing fine, but the phone can briefly starve a *new* fetch right
+   as the next clip starts. A couple of quick retries rides that out
+   instead of giving up and falling back to a browser voice that
+   won't speak with the screen off anyway. */
+function attemptPlay(retry){
+  retry=retry||0;
+  player.play().catch(err=>{
+    if(!speaking || paused) return;
+    if(retry<4){ setTimeout(()=>attemptPlay(retry+1), 500*(retry+1)); }
+    else { console.warn('audio failed after retries, using browser voice',err); fallbackFrom(qi); }
+  });
 }
 player.addEventListener('ended',()=>{ if(!speaking || paused) return; qi++; playClip(); });
 player.addEventListener('error',()=>{ if(speaking && !paused) fallbackFrom(qi); });
+
+/* pre-fetch the next clip (or, on a person's last clip with Keep Playing
+   on, the next person's first clip) while this one is still playing —
+   audio/* is cached for a year (see _headers), so by the time playback
+   reaches the boundary the file is already sitting in the browser's
+   cache and needs no live network request to keep going. */
+let prefetchPool=[];
+function prefetchUrl(url){
+  if(!url) return;
+  const a=new Audio(); a.preload='auto'; a.src=url;
+  prefetchPool.push(a);
+  if(prefetchPool.length>3) prefetchPool.shift();
+}
+function prefetchNext(){
+  if(qi+1<queue.length){ prefetchUrl('audio/'+queue[qi+1]); return; }
+  if(!keepPlaying || !curPerson) return;
+  const curGlobalIdx=PEOPLE.indexOf(curPerson);
+  if(!shuffleBag.length) shuffleBag=shuffled(curGlobalIdx);
+  const upNext=PEOPLE[shuffleBag[0]];
+  const clips=upNext ? (AUDIO[upNext.name]||[]) : [];
+  if(clips.length) prefetchUrl('audio/'+clips[0]);
+}
 
 /* if a clip is missing or blocked, finish the story with the browser voice */
 function fallbackFrom(n){
@@ -556,7 +593,7 @@ function pauseSpeech(){
 function resumeSpeech(){
   if(!speaking || !paused) return;
   paused=false;
-  if(mode==='audio') player.play().catch(()=>fallbackFrom(qi)); else if(synth) synth.resume();
+  if(mode==='audio') attemptPlay(); else if(synth) synth.resume();
   readBtn.classList.remove('paused'); readBtn.classList.add('playing'); readLabel.textContent='Pause';
   if('mediaSession' in navigator) navigator.mediaSession.playbackState='playing';
 }
