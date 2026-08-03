@@ -130,7 +130,7 @@ button:focus-visible{outline:4px solid var(--ink); outline-offset:3px; border-ra
 .big-btn.read.paused{background:var(--saffron); color:#7A5C05;}
 .big-btn[disabled]{opacity:.34; pointer-events:none;}
 
-.controls2{display:flex; justify-content:center; padding:0 16px 14px; flex:none;}
+.controls2{display:flex; justify-content:center; align-items:center; gap:22px; padding:0 16px 14px; flex:none;}
 .keep-toggle{position:relative; display:flex; align-items:center; gap:10px; font-size:.88rem; font-weight:400; color:var(--ink-soft); padding:6px 4px; cursor:pointer;}
 .keep-toggle .switch{position:relative; width:44px; height:26px; border-radius:999px; background:#D8E3DF; transition:background .2s ease; flex:none;}
 .keep-toggle .switch::after{content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.25); transition:transform .2s ease;}
@@ -165,6 +165,13 @@ button:focus-visible{outline:4px solid var(--ink); outline-offset:3px; border-ra
       <h1>Baji's Story Garden</h1>
       <p class="arabic">حَديقةُ القِصَص</p>
       <p class="sub">Pick a door. Then pick a person to hear their story.</p>
+      <div style="display:flex; justify-content:center; margin-top:4px;">
+        <label class="keep-toggle" title="Switch every story to a slower, softer bedtime retelling, when one is available.">
+          <input type="checkbox" id="storyModeToggleHome">
+          <span class="switch" aria-hidden="true"></span>
+          Story Mode
+        </label>
+      </div>
     </header>
     <div class="star-rule" aria-hidden="true"><span></span><i></i><span></span></div>
     <div class="grid" id="catGrid"></div>
@@ -211,6 +218,11 @@ button:focus-visible{outline:4px solid var(--ink); outline-offset:3px; border-ra
     </button>
   </div>
   <div class="controls2">
+    <label class="keep-toggle" title="Switch every story to a slower, softer bedtime retelling, when one is available.">
+      <input type="checkbox" id="storyModeToggle">
+      <span class="switch" aria-hidden="true"></span>
+      Story Mode
+    </label>
     <label class="keep-toggle" title="Stories will continue to be narrated from one character to another, until you pause.">
       <input type="checkbox" id="keepPlayingToggle" aria-describedby="keepPlayingHint">
       <span class="switch" aria-hidden="true"></span>
@@ -339,6 +351,26 @@ function speakable(t){ return SAY_RE ? t.replace(SAY_RE, (m,pre,w) => pre + (SAY
 let CATS = [], PEOPLE = [];
 
 /* ============================================================
+   STORY MODE — a slower, softer bedtime retelling, when a person
+   has one. Site-wide and remembered across visits.
+   ============================================================ */
+let storyModeOn = localStorage.getItem('sg-story-mode') === '1';
+function personText(p){
+  return (storyModeOn && p.storyMode) ? p.storyMode : {paras:p.paras, lesson:p.lesson};
+}
+function personClips(p){
+  if(!p) return [];
+  if(storyModeOn && p.storyMode && AUDIO_SM[p.name]) return AUDIO_SM[p.name];
+  return AUDIO[p.name] || [];
+}
+function setStoryMode(on){
+  storyModeOn = on;
+  localStorage.setItem('sg-story-mode', on ? '1' : '0');
+  [storyModeToggleHome, storyModeToggle].forEach(el=>{ if(el) el.checked = on; });
+  if(!storyEl.hidden && curPerson){ stopSpeech(); renderStory(PEOPLE.indexOf(curPerson)); }
+}
+
+/* ============================================================
    NAVIGATION
    ============================================================ */
 const homeEl=document.getElementById('home'), listEl=document.getElementById('list'), storyEl=document.getElementById('story');
@@ -347,6 +379,11 @@ const listTitle=document.getElementById('listTitle'), listSub=document.getElemen
 const pageEl=document.getElementById('page'), storyTitle=document.getElementById('storyTitle');
 const readBtn=document.getElementById('readBtn'), readLabel=document.getElementById('readLabel');
 const prevBtn=document.getElementById('prevPerson'), nextBtn=document.getElementById('nextPerson');
+const storyModeToggle=document.getElementById('storyModeToggle');
+const storyModeToggleHome=document.getElementById('storyModeToggleHome');
+storyModeToggle.checked = storyModeToggleHome.checked = storyModeOn;
+storyModeToggle.addEventListener('change', ()=>setStoryMode(storyModeToggle.checked));
+storyModeToggleHome.addEventListener('change', ()=>setStoryMode(storyModeToggleHome.checked));
 
 let curCat=null, curOrder=[], curIdx=0;
 
@@ -424,12 +461,13 @@ function renderStory(i){
   stopSpeech();
   const p=PEOPLE[i];
   curPerson=p;
-  const clips=(AUDIO[p.name]||[]);
+  const text=personText(p);
+  const clips=personClips(p);
   readBtn.classList.toggle('recorded', clips.length>0);
   storyTitle.innerHTML=`${p.name}<span>${p.area}</span>`;
-  const body=p.paras.map(t=>`<p>${t}</p>`).join('');
+  const body=text.paras.map(t=>`<p>${t}</p>`).join('');
   pageEl.innerHTML=`<svg class="scene" viewBox="0 0 100 100" aria-hidden="true">${art(p)}</svg>${body}
-    <div class="lesson"><b>Something to remember</b><p>${p.lesson}</p></div>`;
+    <div class="lesson"><b>Something to remember</b><p>${text.lesson}</p></div>`;
   pageEl.scrollTop=0;
   pageEl.style.animation='none'; void pageEl.offsetWidth; pageEl.style.animation='';
   prevBtn.disabled = curIdx<=0;
@@ -465,7 +503,7 @@ document.addEventListener('keydown',e=>{
    Recorded narration if audio/ has it, browser voice otherwise.
    ============================================================ */
 const synth=window.speechSynthesis;
-let AUDIO={}, curPerson=null;
+let AUDIO={}, AUDIO_SM={}, curPerson=null;
 let chosenVoice=null, speaking=false, paused=false, mode=null, queue=[], qi=0;
 
 const FEMALE_US=['samantha','ava','allison','susan','nicky','zoe','joanna','salli','kendra','kimberly',
@@ -560,7 +598,7 @@ function predecodeNextPerson(){
   const curGlobalIdx=PEOPLE.indexOf(curPerson);
   if(!shuffleBag.length) shuffleBag=shuffled(curGlobalIdx);
   const upNext=PEOPLE[shuffleBag[0]];
-  const clips=upNext?(AUDIO[upNext.name]||[]):[];
+  const clips=personClips(upNext);
   if(clips.length) predecode(clips.map(c=>'audio/'+c));
 }
 
@@ -697,7 +735,7 @@ if('mediaSession' in navigator){
 }
 
 function startReading(){
-  const clips=curPerson ? (AUDIO[curPerson.name]||[]) : [];
+  const clips=personClips(curPerson);
   if(!clips.length && !synth){ readLabel.textContent='Not available'; return; }
   speaking=true; paused=false; qi=0;
   readBtn.classList.add('playing'); readBtn.classList.remove('paused'); readLabel.textContent='Pause';
@@ -741,7 +779,7 @@ async function boot(){
     /* narration is optional — the site works fine before any audio exists */
     try{
       const m = await fetch('audio/manifest.json?v=' + Date.now());
-      if(m.ok) AUDIO = (await m.json()).people || {};
+      if(m.ok){ const mf = await m.json(); AUDIO = mf.people || {}; AUDIO_SM = mf.storyMode || {}; }
     }catch(e){ /* no recorded narration yet */ }
   }catch(err){
     const isFile = location.protocol === 'file:';

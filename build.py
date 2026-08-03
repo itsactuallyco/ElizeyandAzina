@@ -125,6 +125,14 @@ def main():
                  f"(the last becomes 'Something to remember') — skipped")
             continue
 
+        story_mode = None
+        sm_text = str(r.get("Story Mode") or "")
+        sm_paras = [clean(p) for p in sm_text.split("\n") if clean(p)]
+        if sm_paras and len(sm_paras) < 2:
+            warn(f"{name}: Story Mode needs at least two paragraphs — ignored for now")
+        elif sm_paras:
+            story_mode = dict(paras=sm_paras[:-1], lesson=sm_paras[-1])
+
         cat = clean(r.get("Category"))
         if cat not in valid_cats:
             fallback = categories[0]["id"]
@@ -153,6 +161,7 @@ def main():
             tint=colour(r.get("Card Colour"), DEFAULTS["tint"], name, "Card Colour"),
             paras=paras[:-1],
             lesson=paras[-1],
+            storyMode=story_mode,
         ))
 
     if not people:
@@ -160,13 +169,17 @@ def main():
 
     # ---- pronunciation ----
     say = {}
+    ipa = {}
     for r in rows(wb["Pronunciation"]):
         written, spoken = clean(r.get("Written")), clean(r.get("Say It Like"))
         if written and spoken:
             say[written] = spoken
+        written_ipa = clean(r.get("IPA"))
+        if written and written_ipa:
+            ipa[written] = written_ipa
 
     # ---- write ----
-    data = dict(categories=categories, people=people, pronunciations=say)
+    data = dict(categories=categories, people=people, pronunciations=say, ipa=ipa)
     JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
     empty = [c["name"] for c in categories
@@ -175,9 +188,11 @@ def main():
         warn("These categories have nobody in them and will show '0 stories': "
              + ", ".join(empty))
 
+    with_story_mode = sum(1 for p in people if p["storyMode"])
     print(f"Wrote {JSON.name}")
     print(f"  {len(people)} people across {len(categories)} categories")
-    print(f"  {len(say)} pronunciation entries")
+    print(f"  {with_story_mode} have Story Mode text")
+    print(f"  {len(say)} pronunciation entries, {len(ipa)} with IPA")
     for c in categories:
         print(f"    {c['name']}: {sum(1 for p in people if p['cat'] == c['id'])}")
 
