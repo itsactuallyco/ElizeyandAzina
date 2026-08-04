@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#CFE4DA">
 <title>Baji's Story Garden — Great Lives from Islamic History</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Lexend:wght@300;400;600&family=Amiri:wght@400&display=swap" rel="stylesheet">
@@ -737,6 +738,10 @@ if('mediaSession' in navigator){
 function startReading(){
   const clips=personClips(curPerson);
   if(!clips.length && !synth){ readLabel.textContent='Not available'; return; }
+  // belt-and-suspenders: guarantees no previously-scheduled audio sources
+  // (e.g. from a stray double-trigger) can ever overlap a fresh start
+  stopAudioEngine();
+  if(synth) synth.cancel();
   speaking=true; paused=false; qi=0;
   readBtn.classList.add('playing'); readBtn.classList.remove('paused'); readLabel.textContent='Pause';
   updateMediaSession();
