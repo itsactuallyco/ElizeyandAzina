@@ -84,7 +84,9 @@ def main():
         if args.only and args.only.lower() not in written.lower():
             continue
         if use_ipa and written in ipa:
-            sent, how = f"/{ipa[written]}/", "IPA"
+            val = ipa[written].strip()
+            sent = val if val.startswith("/") and val.endswith("/") else f"/{val}/"
+            how = "IPA"
         else:
             sent, how = spoken, "respelling"
         entries.append(dict(
@@ -111,6 +113,11 @@ def main():
             from elevenlabs.client import ElevenLabs
             vs = ElevenLabs().voices.get_all().voices
             match = next((v for v in vs if v.name.lower() == voice.lower()), None)
+            if not match:
+                # Voice Library entries often have a " - Descriptor" suffix
+                prefix = [v for v in vs if v.name.lower().startswith(voice.lower())]
+                if len(prefix) == 1:
+                    match = prefix[0]
             if not match:
                 sys.exit("No such ElevenLabs voice: " + voice)
             vid = match.voice_id

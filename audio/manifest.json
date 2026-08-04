@@ -1,38 +1,35 @@
 {
  "provider": "elevenlabs",
- "model": "eleven_v3",
- "voice": "Rachel",
+ "model": "eleven_multilingual_v2",
+ "voice": {
+  "normal": "Nina",
+  "storymode": "Fernanda"
+ },
  "people": {
-  "Salah ad-Din": [
-   "salah-ad-din/00.mp3",
-   "salah-ad-din/01.mp3",
-   "salah-ad-din/02.mp3",
-   "salah-ad-din/03.mp3",
-   "salah-ad-din/04.mp3",
-   "salah-ad-din/05.mp3",
-   "salah-ad-din/06.mp3"
+  "Khadijah bint Khuwaylid": [
+   "khadijah-bint-khuwaylid/00.mp3",
+   "khadijah-bint-khuwaylid/01.mp3",
+   "khadijah-bint-khuwaylid/02.mp3",
+   "khadijah-bint-khuwaylid/03.mp3",
+   "khadijah-bint-khuwaylid/04.mp3"
   ]
  },
  "storyMode": {
-  "Salah ad-Din": [
-   "salah-ad-din/sm/00.mp3",
-   "salah-ad-din/sm/01.mp3",
-   "salah-ad-din/sm/02.mp3",
-   "salah-ad-din/sm/03.mp3",
-   "salah-ad-din/sm/04.mp3",
-   "salah-ad-din/sm/05.mp3",
-   "salah-ad-din/sm/06.mp3",
-   "salah-ad-din/sm/07.mp3",
-   "salah-ad-din/sm/08.mp3",
-   "salah-ad-din/sm/09.mp3",
-   "salah-ad-din/sm/10.mp3",
-   "salah-ad-din/sm/11.mp3",
-   "salah-ad-din/sm/12.mp3",
-   "salah-ad-din/sm/13.mp3",
-   "salah-ad-din/sm/14.mp3",
-   "salah-ad-din/sm/15.mp3",
-   "salah-ad-din/sm/16.mp3",
-   "salah-ad-din/sm/17.mp3"
+  "Khadijah bint Khuwaylid": [
+   "khadijah-bint-khuwaylid/sm/00.mp3",
+   "khadijah-bint-khuwaylid/sm/01.mp3",
+   "khadijah-bint-khuwaylid/sm/02.mp3",
+   "khadijah-bint-khuwaylid/sm/03.mp3",
+   "khadijah-bint-khuwaylid/sm/04.mp3",
+   "khadijah-bint-khuwaylid/sm/05.mp3",
+   "khadijah-bint-khuwaylid/sm/06.mp3",
+   "khadijah-bint-khuwaylid/sm/07.mp3",
+   "khadijah-bint-khuwaylid/sm/08.mp3",
+   "khadijah-bint-khuwaylid/sm/09.mp3",
+   "khadijah-bint-khuwaylid/sm/10.mp3",
+   "khadijah-bint-khuwaylid/sm/11.mp3",
+   "khadijah-bint-khuwaylid/sm/12.mp3",
+   "khadijah-bint-khuwaylid/sm/13.mp3"
   ]
  },
  "hashes": {
@@ -266,6 +263,20 @@
   "salah-ad-din/sm/14": "303c4c2e87c23201",
   "salah-ad-din/sm/15": "c1eea0dc441ece6d",
   "salah-ad-din/sm/16": "889dec9c5ea27976",
-  "salah-ad-din/sm/17": "d1b0d13526a4e6d3"
+  "salah-ad-din/sm/17": "d1b0d13526a4e6d3",
+  "khadijah-bint-khuwaylid/sm/00": "2ba4250764d714cc",
+  "khadijah-bint-khuwaylid/sm/01": "153b51d502c645fd",
+  "khadijah-bint-khuwaylid/sm/02": "291e79d3e307e228",
+  "khadijah-bint-khuwaylid/sm/03": "459013a45dd483de",
+  "khadijah-bint-khuwaylid/sm/04": "de144e1bd64612a7",
+  "khadijah-bint-khuwaylid/sm/05": "459013a45dd483de",
+  "khadijah-bint-khuwaylid/sm/06": "148581bddf6131a1",
+  "khadijah-bint-khuwaylid/sm/07": "459013a45dd483de",
+  "khadijah-bint-khuwaylid/sm/08": "a52052e2f75d8ca1",
+  "khadijah-bint-khuwaylid/sm/09": "459013a45dd483de",
+  "khadijah-bint-khuwaylid/sm/10": "57212ee965cb290c",
+  "khadijah-bint-khuwaylid/sm/11": "e13c6aec7a570933",
+  "khadijah-bint-khuwaylid/sm/12": "889dec9c5ea27976",
+  "khadijah-bint-khuwaylid/sm/13": "7c52f3b302666f6d"
  }
 }

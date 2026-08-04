@@ -62,8 +62,14 @@ PROVIDERS = {
         rate_per_million=15.0,
     ),
     "elevenlabs": dict(
-        model="eleven_v3",     # inline IPA support; use eleven_multilingual_v2 to opt out
-        voice="Rachel",        # any voice name from your ElevenLabs library
+        # eleven_v3 supports inline IPA, but as tested it drifts on repeated
+        # occurrences of the same word within a clip regardless of voice —
+        # multilingual_v2 doesn't support IPA but is reliable, and (unlike
+        # v3) supports previous_text/next_text for cross-paragraph continuity.
+        model="eleven_multilingual_v2",
+        # two voices: the regular Children's Story and the Story Mode
+        # retelling are read by different narrators.
+        voices={"normal": "Nina", "storymode": "Fernanda"},
         rate_per_million=60.0,     # rough estimate — ElevenLabs bills against a
                                    # subscription's character quota, not a flat rate
     ),
@@ -96,10 +102,18 @@ def speakable(text, table, ipa=None, use_ipa=False):
     def repl(m):
         word = m.group(1)
         if use_ipa and ipa.get(word):
-            return f"/{ipa[word]}/"
+            return wrap_ipa(ipa[word])
         return table[word]
 
     return pattern.sub(repl, text)
+
+
+def wrap_ipa(value):
+    """The IPA column may or may not already include the /slashes/ — handle both."""
+    value = value.strip()
+    if value.startswith("/") and value.endswith("/"):
+        return value
+    return f"/{value}/"
 
 
 def collect(data, only=None, ipa=None, use_ipa=False):
@@ -118,8 +132,12 @@ def collect(data, only=None, ipa=None, use_ipa=False):
             variants.append(("storymode", f"{folder}/sm",
                               list(story_mode["paras"]) + [story_mode["lesson"]]))
         for kind, sub, paras in variants:
-            for i, para in enumerate(paras):
-                spoken = speakable(para, table, ipa, use_ipa)
+            # every paragraph gets spoken up front so neighbours can be used
+            # as context — ElevenLabs uses this to keep pacing/tone
+            # consistent across the paragraph boundary instead of each clip
+            # sounding like a disconnected, freshly-started sentence.
+            spoken_paras = [speakable(p, table, ipa, use_ipa) for p in paras]
+            for i, spoken in enumerate(spoken_paras):
                 path = AUDIO / sub / f"{i:02d}.mp3"
                 jobs.append(dict(
                     person=person["name"],
@@ -129,12 +147,14 @@ def collect(data, only=None, ipa=None, use_ipa=False):
                     key=path.relative_to(AUDIO).with_suffix("").as_posix(),
                     path=path,
                     text=spoken,
+                    prev_text=spoken_paras[i - 1] if i > 0 else None,
+                    next_text=spoken_paras[i + 1] if i + 1 < len(spoken_paras) else None,
                     hash=hashlib.sha256(spoken.encode("utf-8")).hexdigest()[:16],
                 ))
     return jobs
 
 
-def synth_openai(text, cfg):
+def synth_openai(text, cfg, prev_text=None, next_text=None):
     from openai import OpenAI
     client = OpenAI()
     res = client.audio.speech.create(
@@ -147,17 +167,29 @@ def synth_openai(text, cfg):
     return res.content
 
 
-def synth_elevenlabs(text, cfg):
+def synth_elevenlabs(text, cfg, prev_text=None, next_text=None):
     from elevenlabs.client import ElevenLabs
     client = ElevenLabs()
-    audio = client.text_to_speech.convert(
+    kwargs = dict(
         voice_id=cfg["voice_id"],
         model_id=cfg["model"],
         text=text,
         output_format="mp3_44100_128",
         voice_settings={"stability": 0.55, "similarity_boost": 0.75,
                         "style": 0.15, "use_speaker_boost": True},
+        # "best effort" determinism per ElevenLabs' docs — reduces (but does
+        # not guarantee away) per-call variance in how a given line is read
+        seed=4242,
     )
+    # gives ElevenLabs the neighbouring paragraphs as context, so pacing and
+    # tone carry across the cut instead of each clip sounding freshly started —
+    # eleven_v3 rejects the request outright if these are present at all
+    if cfg["model"] != "eleven_v3":
+        if prev_text:
+            kwargs["previous_text"] = prev_text
+        if next_text:
+            kwargs["next_text"] = next_text
+    audio = client.text_to_speech.convert(**kwargs)
     return b"".join(audio)
 
 
@@ -170,23 +202,36 @@ KNOWN_VOICE_IDS = {
 }
 
 
-def resolve_elevenlabs_voice(cfg):
-    known = KNOWN_VOICE_IDS.get(cfg["voice"].lower())
+_voice_cache = None
+
+
+def resolve_elevenlabs_voice(name):
+    global _voice_cache
+    known = KNOWN_VOICE_IDS.get(name.lower())
     if known:
         return known
-    from elevenlabs.client import ElevenLabs
-    client = ElevenLabs()
-    try:
-        voices = client.voices.get_all().voices
-    except Exception as err:
-        sys.exit(f"Couldn't look up the ElevenLabs voice '{cfg['voice']}' by name: {err}\n"
-                  f"Either add the 'voices_read' permission to your API key, or pass "
-                  f"--voice-id <id> directly if you already know it.")
-    for v in voices:
-        if v.name.lower() == cfg["voice"].lower():
+    if _voice_cache is None:
+        from elevenlabs.client import ElevenLabs
+        try:
+            _voice_cache = ElevenLabs().voices.get_all().voices
+        except Exception as err:
+            sys.exit(f"Couldn't look up the ElevenLabs voice '{name}' by name: {err}\n"
+                      f"Either add the 'voices_read' permission to your API key, or pass "
+                      f"--voice-id-normal/--voice-id-storymode directly if you already know them.")
+    # Voice Library names often carry a " - Descriptor" suffix (e.g. "Fernanda
+    # - Calm Storytelling") that isn't part of what you'd naturally type — try
+    # an exact match first, then fall back to "starts with".
+    for v in _voice_cache:
+        if v.name.lower() == name.lower():
             return v.voice_id
-    names = ", ".join(v.name for v in voices[:12])
-    sys.exit(f"No ElevenLabs voice called '{cfg['voice']}'. Available: {names}")
+    prefix_matches = [v for v in _voice_cache if v.name.lower().startswith(name.lower())]
+    if len(prefix_matches) == 1:
+        return prefix_matches[0].voice_id
+    if len(prefix_matches) > 1:
+        sys.exit(f"'{name}' matches more than one ElevenLabs voice: "
+                  f"{', '.join(v.name for v in prefix_matches)}. Use the fuller name to disambiguate.")
+    names = ", ".join(v.name for v in _voice_cache[:12])
+    sys.exit(f"No ElevenLabs voice called '{name}'. Available: {names}")
 
 
 def main():
@@ -194,9 +239,14 @@ def main():
     ap.add_argument("--provider", default="elevenlabs", choices=list(PROVIDERS))
     ap.add_argument("--model", help="override the default model "
                                     "(elevenlabs: eleven_v3 for IPA, or eleven_multilingual_v2)")
-    ap.add_argument("--voice", help="override the default voice")
+    ap.add_argument("--voice", help="override the default voice (openai, "
+                                     "or elevenlabs if you want the same voice for both)")
+    ap.add_argument("--voice-normal", help="elevenlabs only: voice for the regular story")
+    ap.add_argument("--voice-storymode", help="elevenlabs only: voice for Story Mode")
     ap.add_argument("--voice-id", help="elevenlabs only: skip the by-name lookup "
-                                        "(needs 'voices_read') and use this voice ID directly")
+                                        "(needs 'voices_read') for both voices")
+    ap.add_argument("--voice-id-normal", help="elevenlabs only: skip the lookup for the regular voice")
+    ap.add_argument("--voice-id-storymode", help="elevenlabs only: skip the lookup for the Story Mode voice")
     ap.add_argument("--only", help="just people whose name contains this")
     ap.add_argument("--force", action="store_true", help="regenerate even if unchanged")
     ap.add_argument("--estimate", action="store_true", help="report cost, generate nothing")
@@ -205,8 +255,18 @@ def main():
     cfg = dict(PROVIDERS[args.provider])
     if args.model:
         cfg["model"] = args.model
-    if args.voice:
-        cfg["voice"] = args.voice
+    if args.provider == "openai":
+        if args.voice:
+            cfg["voice"] = args.voice
+    else:
+        if args.voice:
+            cfg["voices"] = {"normal": args.voice, "storymode": args.voice}
+        if args.voice_normal or args.voice_storymode:
+            cfg["voices"] = dict(cfg["voices"])
+            if args.voice_normal:
+                cfg["voices"]["normal"] = args.voice_normal
+            if args.voice_storymode:
+                cfg["voices"]["storymode"] = args.voice_storymode
     use_ipa = args.provider == "elevenlabs" and cfg["model"] == "eleven_v3"
 
     data = load_stories()
@@ -244,8 +304,12 @@ def main():
     if cost > 5 and input("Continue? [y/N] ").strip().lower() != "y":
         return
 
+    voice_ids = {}
     if args.provider == "elevenlabs":
-        cfg["voice_id"] = args.voice_id or resolve_elevenlabs_voice(cfg)
+        overrides = {"normal": args.voice_id_normal or args.voice_id,
+                     "storymode": args.voice_id_storymode or args.voice_id}
+        for kind, name in cfg["voices"].items():
+            voice_ids[kind] = overrides[kind] or resolve_elevenlabs_voice(name)
     synth = {"openai": synth_openai, "elevenlabs": synth_elevenlabs}[args.provider]
 
     failures = []
@@ -254,9 +318,11 @@ def main():
         tag = "SM " if job["kind"] == "storymode" else ""
         label = f"{job['person']} [{tag}{job['index'] + 1}]"
         print(f"  {n}/{len(todo)}  {label}", flush=True)
+        job_cfg = dict(cfg, voice_id=voice_ids.get(job["kind"])) if args.provider == "elevenlabs" else cfg
         for attempt in range(4):
             try:
-                job["path"].write_bytes(synth(job["text"], cfg))
+                job["path"].write_bytes(
+                    synth(job["text"], job_cfg, job["prev_text"], job["next_text"]))
                 hashes[job["key"]] = job["hash"]
                 break
             except Exception as err:
@@ -279,8 +345,9 @@ def main():
         for name in d:
             d[name].sort()
 
+    voice_info = cfg["voices"] if args.provider == "elevenlabs" else cfg["voice"]
     MANIFEST.write_text(json.dumps(
-        dict(provider=args.provider, model=cfg["model"], voice=cfg["voice"],
+        dict(provider=args.provider, model=cfg["model"], voice=voice_info,
              people=people, storyMode=story_mode, hashes=hashes),
         indent=1), encoding="utf-8")
 
